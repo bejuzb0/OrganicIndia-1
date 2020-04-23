@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
     private Button Login;
     private TextView Sign;
    // private Button button;
-//some change
+//testing
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
