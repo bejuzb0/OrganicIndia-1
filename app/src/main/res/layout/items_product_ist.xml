@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    app:cardCornerRadius="10dp"
+    android:padding="10dp"
+    app:cardElevation="0dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_marginStart="10dp"
+                android:id="@+id/product_name"
+                android:layout_centerVertical="true"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="MILK"
+                android:layout_marginLeft="10dp">
+            </TextView>
+            <TextView
+                android:layout_centerHorizontal="true"
+                android:id="@+id/product_quantity"
+                android:layout_width="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_height="wrap_content"
+                android:text="3Lit">
+            </TextView>
+
+            <TextView
+                android:id="@+id/product_amount"
+                android:layout_width="100dp"
+                android:layout_centerVertical="true"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:text="35/Lit"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true">
+            </TextView>
+        </RelativeLayout>
+    </LinearLayout>
+
+
+</androidx.cardview.widget.CardView>
+
+

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".customer.Delivery">
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:layout_margin="15dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/Vendor_name"
+                android:textSize="25dp"
+                android:text="Vendor Name"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            </TextView>
+            <ImageView
+                android:id="@+id/vendor_logo"
+                android:src="@drawable/ic_person"
+                android:layout_alignParentEnd="true"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_alignParentRight="true">
+            </ImageView>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:padding="5dp"
+            android:layout_marginVertical="20dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <RelativeLayout
+                android:layout_marginVertical="2dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text="Product Name : "
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </TextView>
+                <TextView
+                    android:layout_alignParentEnd="true"
+                    android:text="Name"
+                    android:textStyle="bold"
+                    android:id="@+id/product_name"
+                    android:textColor="@color/colorPrimary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true">
+                </TextView>
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_marginVertical="2dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text="Product price : "
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </TextView>
+                <TextView
+                    android:layout_alignParentEnd="true"
+                    android:text="Price"
+                    android:textColor="@color/colorPrimary"
+                    android:id="@+id/product_price"
+                    android:textStyle="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true">
+                </TextView>
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_marginVertical="2dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text="Product quantity : "
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </TextView>
+                <TextView
+                    android:layout_alignParentEnd="true"
+                    android:text="Quantity"
+                    android:id="@+id/product_quantity"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorPrimary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true">
+                </TextView>
+            </RelativeLayout>
+        </LinearLayout>
+
+        <TextView
+            android:layout_marginHorizontal="10dp"
+            android:textColor="@color/colorPrimary"
+            android:layout_gravity="center_horizontal"
+            android:text="This is one time delivery for long term orders, Please subscribe"
+            android:id="@+id/oneTimeDeliveryNote"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        </TextView>
+
+        <LinearLayout
+            android:id="@+id/Subscription_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:textColor="@color/colorPrimary"
+                android:text="Select the period for Subscription"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            </TextView>
+
+            <RelativeLayout
+                android:padding="10dp"
+                android:layout_marginTop="25dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <Button
+                    android:id="@+id/from_button"
+                    android:text="From"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </Button>
+                <TextView
+                    android:text="To"
+                    android:layout_centerInParent="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </TextView>
+                <Button
+                    android:id="@+id/to_button"
+                    android:text="TO"
+                    android:layout_alignParentEnd="true"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true">
+                </Button>
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/done"
+            android:text="Continue"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        </Button>
+
+    </LinearLayout>
+</ScrollView>
