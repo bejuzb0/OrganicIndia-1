@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.example.organicindiapre.MainActivity;
 import com.example.organicindiapre.R;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -71,16 +72,12 @@ public class Customer_Act extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_subscription_customer:
                 //main window of subscription to be made
-
                 Toast.makeText(this, "Subscription Clicked", Toast.LENGTH_SHORT).show();
                 break;
 
-
-
-
-
             case R.id.nav_logout_customer:
                 Toast.makeText(this, "Logout", Toast.LENGTH_SHORT).show();
+                FirebaseAuth.getInstance().signOut();
                 Intent intent=new Intent(this, MainActivity.class);
                 startActivity(intent);
                 break;
