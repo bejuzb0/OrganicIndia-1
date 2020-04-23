@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "109052819198",
+    "firebase_url": "https://unified-adviser-274716.firebaseio.com",
+    "project_id": "unified-adviser-274716",
+    "storage_bucket": "unified-adviser-274716.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:109052819198:android:4a36f9b6309204d08417af",
+        "android_client_info": {
+          "package_name": "com.example.organicindiapre"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "109052819198-01k431a9b4jiqbrgifhiin3245muijda.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXkBB8froxVJ4RaSfy56ETdCk-5A1x4BY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "109052819198-01k431a9b4jiqbrgifhiin3245muijda.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
