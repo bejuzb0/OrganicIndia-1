@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,13 +7,12 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:orientation="vertical"
-        android:layout_gravity="center"
+        android:gravity="center_horizontal"
         >
 
         <ImageView
@@ -40,6 +39,7 @@
             <EditText
                 android:id="@+id/country_code"
                 android:text="+91"
+                android:focusable="false"
                 android:background="@drawable/edit"
                 android:padding="15dp"
                 android:layout_marginEnd="10dp"
@@ -71,6 +71,7 @@
             android:id="@+id/verification_code"
             android:hint="012345"
             android:inputType="number"
+            android:maxLength="8"
             android:padding="15dp"
             android:layout_width="300dp"
             android:textColor="@color/colorAccent"
@@ -90,6 +91,7 @@
                 android:layout_marginLeft="30dp">
             </ProgressBar>
             <TextView
+                android:id="@+id/status"
                 android:layout_marginStart="10dp"
                 android:text="Sending Verification code"
                 android:layout_gravity="center_vertical"
@@ -100,10 +102,10 @@
         </LinearLayout>
         <Button
             android:id="@+id/button"
-            android:layout_width="300dp"
+            android:layout_width="wrap_content"
             android:layout_height="60dp"
             android:layout_gravity="center"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             android:text="Generate otp"
             android:textColor="#fff" />
 
@@ -113,10 +115,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginBottom="50dp"
             android:layout_marginTop="30dp"
             android:text="resend "
             android:textColor="#fff" />
 
-
     </LinearLayout>
-</LinearLayout>
+</ScrollView>

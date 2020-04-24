@@ -10,10 +10,9 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.organicindiapre.customer.Customer_Act;
@@ -39,8 +38,6 @@ import com.google.firebase.database.ValueEventListener;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-
-import java.sql.BatchUpdateException;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -67,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
         final Button login = findViewById(R.id.button);
         final Button resendCode = findViewById(R.id.resend_button);
         final EditText verificationCode = findViewById(R.id.verification_code);
+        final TextView Status = findViewById(R.id.status);
 
 
         progressDialog = new ProgressDialog(this);
@@ -101,7 +99,14 @@ public class MainActivity extends AppCompatActivity {
                 if (isCodeSent)
                 {
                     String code = verificationCode.getText().toString();
-                    verifyPhoneNumberWithCode(mVerificationId, code);
+                    if (code.length() >= 6) {
+                        progressDialog.show();
+                        progressDialog.setMessage("Checking... OTP");
+                        verifyPhoneNumberWithCode(mVerificationId, code);
+                    }
+                    else {
+                        Toast.makeText(MainActivity.this, "Enter valid code", Toast.LENGTH_SHORT).show();
+                    }
                 }
                 else if (number.length() == 10)
                 {
@@ -123,6 +128,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onVerificationCompleted(@NonNull PhoneAuthCredential credential)
             {
+                progressDialog.setMessage("Please wait...");
+                progressDialog.show();
+                Toast.makeText(MainActivity.this, "Verification completed."+credential, Toast.LENGTH_SHORT).show();
                 login.setEnabled(true);
                 statusLayout.setVisibility(View.GONE);
                 mVerificationInProgress = false;
@@ -133,10 +141,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onVerificationFailed(@NonNull FirebaseException ex)
             {
+                progressDialog.dismiss();
                 login.setEnabled(true);
-                statusLayout.setVisibility(View.GONE);
                 mVerificationInProgress = false;
                 Log.d("Firebase Exception", String.valueOf(ex));
+                Toast.makeText(MainActivity.this, ""+ex, Toast.LENGTH_SHORT).show();
                 if (ex instanceof FirebaseAuthInvalidCredentialsException)
                 {
                     verificationCode.setError("Invalid phone number");
@@ -145,6 +154,10 @@ public class MainActivity extends AppCompatActivity {
                 {
                     Snackbar.make(findViewById(android.R.id.content), "Quota exceeded.",
                             Snackbar.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Quota exceeded.", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(MainActivity.this, "Enter valid code", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -154,14 +167,15 @@ public class MainActivity extends AppCompatActivity {
             public void onCodeSent(@NonNull String verificationId,
                                    @NonNull PhoneAuthProvider.ForceResendingToken token)
             {
+                Toast.makeText(MainActivity.this, "OTP sent successfully", Toast.LENGTH_SHORT).show();
                 login.setEnabled(true);
                 verificationCode.setVisibility(View.VISIBLE);
-                statusLayout.setVisibility(View.GONE);
                 resendCode.setVisibility(View.VISIBLE);
                 mVerificationId = verificationId;
                 mResendToken = token;
                 isCodeSent = true;
                 login.setText("Verify otp");
+                Status.setText("Waiting... for OTP");
             }
         };
 
@@ -201,11 +215,14 @@ public class MainActivity extends AppCompatActivity {
                         else {
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException)
                             {
+                                Toast.makeText(MainActivity.this, ""+task.getException(), Toast.LENGTH_SHORT).show();
                                 Log.d(TAG,"InValidDetails",task.getException());
                                 statusLayout.setVisibility(View.GONE);
                                 Toast.makeText(MainActivity.this, "Enter valid code", Toast.LENGTH_SHORT).show();
                             }
                         }
+
+                        progressDialog.dismiss();
                     }
                 });
     }
@@ -299,9 +316,11 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot)
                 {
+                    progressDialog.dismiss();
                     try{
                         String userType =  dataSnapshot.child("UserType").getValue(String.class);
-                            if (userType.equals("Vendor")) {
+                        assert userType != null;
+                        if (userType.equals("Vendor")) {
                                 setVendor(true);
                             } else {
                                 setVendor(false);
@@ -316,7 +335,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                    progressDialog.dismiss();
                 }
             });
         }
@@ -330,8 +349,8 @@ public class MainActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void update(String Type, final Dialog builder)
     {
-        progressDialog.setMessage("Updating...");
         progressDialog.show();
+        progressDialog.setMessage("Updating...");
         database.child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()).child("UserType").setValue(Type).addOnSuccessListener(new OnSuccessListener<Void>()
         {
             @Override
