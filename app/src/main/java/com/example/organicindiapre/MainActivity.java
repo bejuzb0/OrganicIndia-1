@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private PhoneAuthProvider.ForceResendingToken mResendToken;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
     private boolean isCodeSent = false;
+    private boolean isAuthProcessing = false;
     private FirebaseUser user;
     public ProgressDialog progressDialog;
     public long phoneNoDetails;
@@ -186,12 +187,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void openActivityVend(){
+    public void openActivityVendor(){
         Intent intent=new Intent(this, Vendor_Activity.class);
         startActivity(intent);
     }
 
-    public void openActivityCust() {
+    public void openActivityCustomer() {
         Intent intent = new Intent(this, Customer_Act.class);
         startActivity(intent);
     }
@@ -201,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         if (user != null)
         {
-            GotActivity();
+            GotoActivity();
         }
     }
 
@@ -212,6 +213,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task)
                     {
+                        isAuthProcessing = false;
                         if (task.isSuccessful())
                         {
                             Toast.makeText(MainActivity.this, "Successful verification", Toast.LENGTH_SHORT).show();
@@ -232,6 +234,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startPhoneNumberVerification(String phoneNumber) {
+        isAuthProcessing = true;
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
                 phoneNumber,
                 60,
@@ -249,6 +252,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void resendVerificationCode(String phoneNumber,
                                         PhoneAuthProvider.ForceResendingToken token) {
+        isAuthProcessing = true;
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
                 phoneNumber,
                 60,
@@ -258,9 +262,8 @@ public class MainActivity extends AppCompatActivity {
                 token);
     }
 
-    private void getUserDetails()
+    private void setUserType()
     {
-
         final Dialog builder = new Dialog(this);
         builder.setCancelable(false);
         builder.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -288,6 +291,7 @@ public class MainActivity extends AppCompatActivity {
         builder.show();
     }
 
+    //updating userType in SharedPreferences
     private void setVendor(boolean vendor)
     {
         getSharedPreferences("PREFERENCE", MODE_PRIVATE).edit()
@@ -300,13 +304,13 @@ public class MainActivity extends AppCompatActivity {
                 .getBoolean("isVendor", false);
     }
 
-    private void GotActivity()
+    private void GotoActivity()
     {
         if (getVendor()){
-            openActivityVend();
+            openActivityVendor();
         }
         else {
-            openActivityCust();
+            openActivityCustomer();
         }
     }
 
@@ -314,7 +318,6 @@ public class MainActivity extends AppCompatActivity {
     private void  checkNewUser()
     {
         try {
-
             db.collection("Users").document(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -322,30 +325,21 @@ public class MainActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<DocumentSnapshot> task)
                         {
                             if (task.isSuccessful()){
-                                progressDialog.dismiss();
-                                try{
                                     DocumentSnapshot documentSnapshot = task.getResult();
-                                    assert documentSnapshot != null;
-                                    String userType = String.valueOf(documentSnapshot.get("UserType"));
-                                    if (userType.equals("Vendor"))
-                                    {
+                                    String userType = String.valueOf(Objects.requireNonNull(documentSnapshot).get("UserType"));
+                                    if (userType.equals("Vendor")) {
                                         setVendor(true);
-                                        GotActivity();
+                                        GotoActivity();
                                     }
-                                    else if (userType.equals("Customer"))
-                                        {
+                                    else if (userType.equals("Customer")) {
                                         setVendor(false);
-                                            GotActivity();
+                                        GotoActivity();
                                     }
                                     else {
-                                        getUserDetails();
+                                        setUserType();
                                     }
 
-
-                                }catch (Exception ex){
-                                    getUserDetails();
-
-                                }
+                                progressDialog.dismiss();
                             }
 
                         }
@@ -354,7 +348,7 @@ public class MainActivity extends AppCompatActivity {
         catch (Exception ex)
         {
             Toast.makeText(this, ""+ex, Toast.LENGTH_SHORT).show();
-            getUserDetails();
+            setUserType();
         }
     }
 
@@ -374,24 +368,33 @@ public class MainActivity extends AppCompatActivity {
             user.put("DeliveryAddress","Not set");
             user.put("DeliveryAddressName","Not set");
         }
+
         db.collection("Users").document(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
                 .set(user)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
-                    public void onSuccess(Void aVoid) {
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()){
+                            builder.dismiss();
+                            GotoActivity();
+                        }
+                        else {
+                            Toast.makeText(MainActivity.this, "Error : "+task.getException(), Toast.LENGTH_SHORT).show();
+                        }
                         progressDialog.dismiss();
-                        builder.dismiss();
-                        GotActivity();
-                        Log.d(TAG, "DocumentSnapshot successfully written!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error writing document", e);
+
                     }
                 });
 
     }
 
+    @Override
+    public void onBackPressed() {
+        if (!isAuthProcessing) {
+            finishAffinity();
+        }
+        else {
+            super.onBackPressed();
+        }
+    }
 }

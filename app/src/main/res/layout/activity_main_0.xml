@@ -110,15 +110,14 @@
             android:textColor="#fff" />
 
         <Button
-            android:visibility="gone"
             android:id="@+id/resend_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_gravity="center"
             android:layout_marginBottom="50dp"
-            android:layout_marginTop="30dp"
-            android:text="resend "
-            android:textColor="#fff" />
+            android:layout_marginTop="20dp"
+            android:text="resend code" />
 
     </LinearLayout>
 </ScrollView>
