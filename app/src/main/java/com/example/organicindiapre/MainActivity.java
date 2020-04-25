@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean isCodeSent = false;
     private FirebaseUser user;
     public ProgressDialog progressDialog;
+    public String phoneNoDetails;
     private DatabaseReference database;
     private LinearLayout statusLayout;
 
@@ -96,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 login.setEnabled(false);
                 String number = phoneNumber.getText().toString();
+                phoneNoDetails = number;
                 if (isCodeSent)
                 {
                     String code = verificationCode.getText().toString();
@@ -351,6 +353,7 @@ public class MainActivity extends AppCompatActivity {
     {
         progressDialog.show();
         progressDialog.setMessage("Updating...");
+        database.child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()).child("MobileNumber").setValue(phoneNoDetails);
         database.child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()).child("UserType").setValue(Type).addOnSuccessListener(new OnSuccessListener<Void>()
         {
             @Override
