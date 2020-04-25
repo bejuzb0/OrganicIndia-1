@@ -273,7 +273,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v)
             {
                 setVendor(true);
-                update("Vendor",builder);
+                update("Vendor",builder, true);
             }
         });
         customer.setOnClickListener(new View.OnClickListener() {
@@ -282,7 +282,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v)
             {
                 setVendor(false);
-                update("Customer",builder);
+                update("Customer",builder, false);
             }
         });
         builder.show();
@@ -349,10 +349,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    private void update(String Type, final Dialog builder)
+    private void update(String Type, final Dialog builder, boolean isVendor)
     {
         progressDialog.show();
         progressDialog.setMessage("Updating...");
+        if(isVendor == false) {
+            database.child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()).child("DeliveryAddress").setValue("Not Set");
+            database.child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()).child("DeliveryAddressName").setValue("Not Set");
+        }
         database.child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()).child("MobileNumber").setValue(phoneNoDetails);
         database.child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()).child("UserType").setValue(Type).addOnSuccessListener(new OnSuccessListener<Void>()
         {
