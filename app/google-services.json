@@ -15,6 +15,30 @@
       },
       "oauth_client": [
         {
+          "client_id": "109052819198-sqrjfo2pptnv2o8519btsu73e80t0dkf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.organicindiapre",
+            "certificate_hash": "1f58367deeab3004e617bce532184340c82e5f6f"
+          }
+        },
+        {
+          "client_id": "109052819198-2et57i66b7002o8e1qt0q28eccbm1rkb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.organicindiapre",
+            "certificate_hash": "e026cd0d551172a60a6adf3c80545928cc104798"
+          }
+        },
+        {
+          "client_id": "109052819198-uap36m9r5eqresd2fel8sqancurcimne.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.organicindiapre",
+            "certificate_hash": "fefffa50386ecc57d96bbb6782b7c50d4530aa80"
+          }
+        },
+        {
           "client_id": "109052819198-01k431a9b4jiqbrgifhiin3245muijda.apps.googleusercontent.com",
           "client_type": 3
         }

@@ -44,7 +44,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_width="wrap_content"
             android:textStyle="bold"
-            android:text="This action can't be undo"
+            android:text="This action can't be undone"
             android:layout_height="wrap_content">
         </TextView>
     </LinearLayout>

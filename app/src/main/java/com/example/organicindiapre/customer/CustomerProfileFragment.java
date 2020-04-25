@@ -25,7 +25,6 @@ import androidx.fragment.app.Fragment;
 
 */
 public class CustomerProfileFragment extends Fragment {
-    private DatabaseReference database;
     private FirebaseUser user;
     String userID;
     private static final String ARG_PARAM1 = "param1";
@@ -83,27 +82,6 @@ public class CustomerProfileFragment extends Fragment {
         final EditText cust_deliver_addr_name_update = view.findViewById(R.id.editTextDelName);
         final EditText cust_deliver_addr_addr_update = view.findViewById(R.id.editTextDelAddr);
 
-        database = FirebaseDatabase.getInstance().getReference().child("User").child(userID);
-
-       database.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                String name = dataSnapshot.child("Name").getValue().toString();
-                String delAddrName = dataSnapshot.child("DeliveryAddressName").getValue().toString();
-                String delAddr = dataSnapshot.child("DeliveryAddress").getValue().toString();
-                String mobileNo = dataSnapshot.child("MobileNumber").getValue().toString();
-                cust_name.setText(name);
-                cust_phone_no.setText(mobileNo);
-                cust_delivery_addr_name.setText(delAddrName);
-                cust_delivery_addr.setText(delAddr);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
 
 
         save.setOnClickListener(new View.OnClickListener() {

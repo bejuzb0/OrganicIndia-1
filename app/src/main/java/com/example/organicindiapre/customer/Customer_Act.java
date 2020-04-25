@@ -31,7 +31,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 public class Customer_Act extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private DrawerLayout drawer;
-    private DatabaseReference database;
     private FirebaseUser user;
 
     @Override
@@ -44,7 +43,7 @@ public class Customer_Act extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
         user = FirebaseAuth.getInstance().getCurrentUser();
         String userID = user.getUid();
-        //Log.i("Cust",s);
+
 
         drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView=findViewById(R.id.nav_view);
@@ -75,21 +74,6 @@ public class Customer_Act extends AppCompatActivity implements NavigationView.On
                 break;
 
             case R.id.nav_mobile_customer:
-                String userId = user.getUid();
-                database = FirebaseDatabase.getInstance().getReference().child("User").child(userId);
-                database.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        String ph_no = dataSnapshot.child("MobileNumber").getValue().toString();
-                        Toast.makeText(getApplicationContext(), ph_no, Toast.LENGTH_SHORT).show();
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
                 break;
 
             case R.id.nav_order_customer:

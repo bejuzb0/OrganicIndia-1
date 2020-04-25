@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.example.organicindiapre.customer.Customer_Act;
 import com.example.organicindiapre.vendor.Vendor_Activity;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
@@ -29,15 +30,15 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -52,15 +53,16 @@ public class MainActivity extends AppCompatActivity {
     private boolean isCodeSent = false;
     private FirebaseUser user;
     public ProgressDialog progressDialog;
-    public String phoneNoDetails;
-    private DatabaseReference database;
+    public long phoneNoDetails;
     private LinearLayout statusLayout;
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_0);
 
+        
         final EditText phoneNumber = findViewById(R.id.etName);
         final Button login = findViewById(R.id.button);
         final Button resendCode = findViewById(R.id.resend_button);
@@ -76,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
 
-        database = FirebaseDatabase.getInstance().getReference().child("User");
+        db = FirebaseFirestore.getInstance();
 
         resendCode.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 login.setEnabled(false);
                 String number = phoneNumber.getText().toString();
-                phoneNoDetails = number;
+                phoneNoDetails = Long.parseLong(number);
                 if (isCodeSent)
                 {
                     String code = verificationCode.getText().toString();
@@ -212,6 +214,7 @@ public class MainActivity extends AppCompatActivity {
                     {
                         if (task.isSuccessful())
                         {
+                            Toast.makeText(MainActivity.this, "Successful verification", Toast.LENGTH_SHORT).show();
                             checkNewUser();
                         }
                         else {
@@ -223,7 +226,6 @@ public class MainActivity extends AppCompatActivity {
                                 Toast.makeText(MainActivity.this, "Enter valid code", Toast.LENGTH_SHORT).show();
                             }
                         }
-
                         progressDialog.dismiss();
                     }
                 });
@@ -272,7 +274,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v)
             {
-                setVendor(true);
                 update("Vendor",builder, true);
             }
         });
@@ -281,7 +282,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v)
             {
-                setVendor(false);
                 update("Customer",builder, false);
             }
         });
@@ -314,32 +314,42 @@ public class MainActivity extends AppCompatActivity {
     private void  checkNewUser()
     {
         try {
-            database.child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot)
-                {
-                    progressDialog.dismiss();
-                    try{
-                        String userType =  dataSnapshot.child("UserType").getValue(String.class);
-                        assert userType != null;
-                        if (userType.equals("Vendor")) {
-                                setVendor(true);
-                            } else {
-                                setVendor(false);
+
+            db.collection("Users").document(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task)
+                        {
+                            if (task.isSuccessful()){
+                                progressDialog.dismiss();
+                                try{
+                                    DocumentSnapshot documentSnapshot = task.getResult();
+                                    assert documentSnapshot != null;
+                                    String userType = String.valueOf(documentSnapshot.get("UserType"));
+                                    if (userType.equals("Vendor"))
+                                    {
+                                        setVendor(true);
+                                        GotActivity();
+                                    }
+                                    else if (userType.equals("Customer"))
+                                        {
+                                        setVendor(false);
+                                            GotActivity();
+                                    }
+                                    else {
+                                        getUserDetails();
+                                    }
+
+
+                                }catch (Exception ex){
+                                    getUserDetails();
+
+                                }
                             }
-                            GotActivity();
 
-                    }catch (Exception ex){
-                        getUserDetails();
-
-                    }
-
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                    progressDialog.dismiss();
-                }
-            });
+                        }
+                    });
         }
         catch (Exception ex)
         {
@@ -351,23 +361,36 @@ public class MainActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void update(String Type, final Dialog builder, boolean isVendor)
     {
+        // updating data
+        setVendor(isVendor);
         progressDialog.show();
         progressDialog.setMessage("Updating...");
-        if(isVendor == false) {
-            database.child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()).child("DeliveryAddress").setValue("Not Set");
-            database.child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()).child("DeliveryAddressName").setValue("Not Set");
-        }
-        database.child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()).child("MobileNumber").setValue(phoneNoDetails);
-        database.child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()).child("UserType").setValue(Type).addOnSuccessListener(new OnSuccessListener<Void>()
+        Map<String, Object> user = new HashMap<>();
+        user.put("MobileNumber", phoneNoDetails);
+        user.put("UserType", Type);
+
+        if(!isVendor)
         {
-            @Override
-            public void onSuccess(Void aVoid)
-            {
-                progressDialog.dismiss();
-                builder.dismiss();
-                GotActivity();
-            }
-        });
+            user.put("DeliveryAddress","Not set");
+            user.put("DeliveryAddressName","Not set");
+        }
+        db.collection("Users").document(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
+                .set(user)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        progressDialog.dismiss();
+                        builder.dismiss();
+                        GotActivity();
+                        Log.d(TAG, "DocumentSnapshot successfully written!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error writing document", e);
+                    }
+                });
 
     }
 
