@@ -54,9 +54,10 @@ public class Customer_Act extends AppCompatActivity implements NavigationView.On
         toggle.syncState();
 
         if(savedInstanceState== null) {
+
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_customer,
-                    new CustomerProfileFragment()).commit();
-            navigationView.setCheckedItem(R.id.nav_profile);
+                    new CustomerFragment()).commit();
+            navigationView.setCheckedItem(R.id.nav_order_customer);
         }
 
 
