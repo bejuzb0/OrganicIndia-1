@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.organicindiapre">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:icon="@mipmap/ic_launcher"
@@ -10,11 +10,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".UserDetails"></activity>
         <activity
             android:name=".customer.Delivery"
-            android:label="Delivery" >
-        </activity>
-        <!-- <activity -->
+            android:label="Delivery"></activity> <!-- <activity -->
         <!-- android:name=".customer.CustomerActivity" -->
         <!-- android:theme="@style/AppTheme.NoActionBar"> -->
         <!-- </activity> -->

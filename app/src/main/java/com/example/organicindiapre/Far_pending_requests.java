@@ -15,9 +15,20 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
+import java.util.Objects;
+
 
 public class Far_pending_requests extends Fragment
 {
+
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Nullable
@@ -31,6 +42,8 @@ public class Far_pending_requests extends Fragment
         RecyclerView pendingReqRecyclerView = view.findViewById(R.id.pending_req_recyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         pendingReqRecyclerView.setLayoutManager(layoutManager);
+
+
 
         CustomerDetails[] customerDetails = new CustomerDetails[]{
                 new CustomerDetails("sai","nuirvbrf ne","994378439"),

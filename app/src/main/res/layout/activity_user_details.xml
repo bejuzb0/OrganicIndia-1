@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".UserDetails">
+<LinearLayout
+    android:gravity="center_horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="30dp"
+    android:layout_margin="10dp"
+    android:orientation="vertical">
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:textStyle="bold"
+        android:textSize="30sp"
+        android:text="Enter Details"
+        android:id="@+id/textView3"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_margin="5dp"
+        android:hint="First Name"
+        android:background="#FFF"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/firstName"
+            android:inputType="textPersonName"
+            android:layout_height="wrap_content"
+            android:background="#FFF"
+            android:layout_width="match_parent" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_margin="5dp"
+        android:background="#FFF"
+        android:hint="Last Name"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/lastName"
+            android:background="#FFF"
+            android:inputType="textPersonName"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_margin="5dp"
+        android:background="#FFF"
+        android:hint="Email"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/emailAddress"
+            android:inputType="textEmailAddress"
+            android:background="#FFF"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_margin="5dp"
+        android:background="#FFF"
+        app:counterEnabled="true"
+        app:passwordToggleTint="@color/colorPrimary"
+        android:hint="Conform Password"
+        app:passwordToggleEnabled="true">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/password"
+            android:background="#FFF"
+            android:inputType="textPassword"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_margin="5dp"
+        app:passwordToggleTint="@color/colorPrimary"
+        android:hint="Conform Password"
+        android:background="#FFF"
+        app:passwordToggleEnabled="true">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/conform_password"
+            android:background="#FFF"
+            android:inputType="textPassword"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <RadioGroup
+        android:layout_marginVertical="20dp"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:id="@+id/category"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp" tools:layout_editor_absoluteY="451dp"
+        tools:layout_editor_absoluteX="39dp">
+        <TextView
+            android:textSize="18sp"
+            android:text="Select account type"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        </TextView>
+    <RadioButton
+        android:checked="true"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:text="Customer"
+        android:id="@+id/customer" />
+
+    <RadioButton
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:text="Vendor"
+        android:id="@+id/vendor" />
+
+    </RadioGroup>
+
+    <Button
+        android:layout_gravity="center_horizontal"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_marginBottom="50dp"
+        android:textSize="17sp"
+        android:textColor="#F9FAF8"
+        android:text="Save"
+        android:id="@+id/saveBtn" />
+</LinearLayout>
+</ScrollView>

@@ -30,7 +30,8 @@
                 android:id="@+id/customer_name"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:text="Ravi">
+                android:text="Ravi"
+                android:layout_toEndOf="@+id/checkbox">
             </TextView>
             <TextView
                 android:layout_centerHorizontal="true"
