@@ -57,7 +57,7 @@ public class Customer_Act extends AppCompatActivity implements NavigationView.On
 
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_customer,
                     new CustomerFragment()).commit();
-            navigationView.setCheckedItem(R.id.nav_order_customer);
+            navigationView.setCheckedItem(R.id.nav_home_customer);
         }
 
 
@@ -74,7 +74,8 @@ public class Customer_Act extends AppCompatActivity implements NavigationView.On
                         new CustomerProfileFragment()).commit();
                 break;
 
-            case R.id.nav_mobile_customer:
+            case R.id.nav_home_customer:
+                Toast.makeText(this, "Home Clicked", Toast.LENGTH_SHORT).show();
                 break;
 
             case R.id.nav_order_customer:

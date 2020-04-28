@@ -10,10 +10,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".UserDetails"></activity>
+        <activity android:name=".UserDetails" />
         <activity
             android:name=".customer.Delivery"
-            android:label="Delivery"></activity> <!-- <activity -->
+            android:label="Delivery" /> <!-- <activity -->
         <!-- android:name=".customer.CustomerActivity" -->
         <!-- android:theme="@style/AppTheme.NoActionBar"> -->
         <!-- </activity> -->

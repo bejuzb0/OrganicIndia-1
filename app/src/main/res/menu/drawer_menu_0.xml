@@ -16,7 +16,7 @@
             android:title="Products" />
 
         <item
-            android:id="@+id/nav_mobile"
+            android:id="@+id/nav_home"
             android:icon="@drawable/ic_mobile"
             android:title="Mobile No." />
 
