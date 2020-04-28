@@ -91,7 +91,7 @@ public class Order_OneTime extends Fragment {
     private List<CustProduct_Subclass> buildProductList() {
         List<CustProduct_Subclass> subItemList = new ArrayList<>();
         for (int i=0; i<5; i++) {
-            CustProduct_Subclass subItem = new CustProduct_Subclass("Product "+i, "Quantity "+i, "Amount" +i);
+            CustProduct_Subclass subItem = new CustProduct_Subclass("Product "+i, "Quantity "+i, "Amount" +i, "Description"+i, "Delivered"+i);
             subItemList.add(subItem);
         }
         return subItemList;
