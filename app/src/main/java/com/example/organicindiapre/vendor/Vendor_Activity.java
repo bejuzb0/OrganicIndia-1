@@ -12,7 +12,6 @@ import com.example.organicindiapre.MainActivity;
 import com.example.organicindiapre.R;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -44,8 +43,8 @@ public class Vendor_Activity extends AppCompatActivity implements NavigationView
 
         if(savedInstanceState== null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    new ProfileFragment()).commit();
-            navigationView.setCheckedItem(R.id.nav_profile);
+                    new HomeFragment()).commit();
+            navigationView.setCheckedItem(R.id.nav_home);
         }
 
 
@@ -79,8 +78,9 @@ public class Vendor_Activity extends AppCompatActivity implements NavigationView
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new ReportFragment()).commit();
                 break;
-            case R.id.nav_mobile:
-                Toast.makeText(this, "+91 8319221857", Toast.LENGTH_SHORT).show();
+            case R.id.nav_home:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new HomeFragment()).commit();
                 break;
 
             case R.id.nav_logout:

@@ -80,13 +80,6 @@ public class CustomerProfileFragment extends Fragment {
 
 
 
-
-
-
-
-
-
-
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
