@@ -1,14 +1,12 @@
 package com.example.organicindiapre;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -18,7 +16,6 @@ import android.widget.Toast;
 import com.example.organicindiapre.customer.Customer_Act;
 import com.example.organicindiapre.vendor.Vendor_Activity;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
@@ -30,15 +27,12 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -217,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
                         if (task.isSuccessful())
                         {
                             Toast.makeText(MainActivity.this, "Successful verification", Toast.LENGTH_SHORT).show();
-                            checkNewUser();
+                            checkUserProfile();
                         }
                         else {
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException)
@@ -262,35 +256,6 @@ public class MainActivity extends AppCompatActivity {
                 token);
     }
 
-    private void setUserType()
-    {
-        final Dialog builder = new Dialog(this);
-        builder.setCancelable(false);
-        builder.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        builder.setContentView(R.layout.dialog_getuserdetails);
-
-        Button vendor = builder.findViewById(R.id.Vendor);
-        Button customer = builder.findViewById(R.id.Customer);
-        vendor.setOnClickListener(new View.OnClickListener()
-        {
-            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-            @Override
-            public void onClick(View v)
-            {
-                update("Vendor",builder, true);
-            }
-        });
-        customer.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-            @Override
-            public void onClick(View v)
-            {
-                update("Customer",builder, false);
-            }
-        });
-        builder.show();
-    }
-
     //updating userType in SharedPreferences
     private void setVendor(boolean vendor)
     {
@@ -306,86 +271,35 @@ public class MainActivity extends AppCompatActivity {
 
     private void GotoActivity()
     {
-        if (getVendor()){
+        if (getVendor()) {
             openActivityVendor();
-        }
-        else {
+        } else {
             openActivityCustomer();
         }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    private void  checkNewUser()
-    {
-        try {
-            db.collection("Users").document(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task)
-                        {
-                            if (task.isSuccessful()){
-                                    DocumentSnapshot documentSnapshot = task.getResult();
-                                    String userType = String.valueOf(Objects.requireNonNull(documentSnapshot).get("UserType"));
-                                    if (userType.equals("Vendor")) {
-                                        setVendor(true);
-                                        GotoActivity();
-                                    }
-                                    else if (userType.equals("Customer")) {
-                                        setVendor(false);
-                                        GotoActivity();
-                                    }
-                                    else {
-                                        setUserType();
-                                    }
+    private void checkUserProfile() {
+        DocumentReference docRef = db.collection("Users").document(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid());
 
-                                progressDialog.dismiss();
-                            }
-
-                        }
-                    });
-        }
-        catch (Exception ex)
-        {
-            Toast.makeText(this, ""+ex, Toast.LENGTH_SHORT).show();
-            setUserType();
-        }
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    private void update(String Type, final Dialog builder, boolean isVendor)
-    {
-        // updating data
-        setVendor(isVendor);
-        progressDialog.show();
-        progressDialog.setMessage("Updating...");
-        Map<String, Object> user = new HashMap<>();
-        user.put("MobileNumber", phoneNoDetails);
-        user.put("UserType", Type);
-
-        if(!isVendor)
-        {
-            user.put("DeliveryAddress","Not set");
-            user.put("DeliveryAddressName","Not set");
-        }
-
-        db.collection("Users").document(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
-                .set(user)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()){
-                            builder.dismiss();
-                            GotoActivity();
-                        }
-                        else {
-                            Toast.makeText(MainActivity.this, "Error : "+task.getException(), Toast.LENGTH_SHORT).show();
-                        }
-                        progressDialog.dismiss();
-
+        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if(documentSnapshot.exists())
+                {
+                    String UserType = Objects.requireNonNull(documentSnapshot.get("UserType")).toString();
+                    if (UserType.equals("Vendor")){
+                        setVendor(true);
+                    }else {
+                        setVendor(false);
                     }
-                });
-
+                    GotoActivity();
+                }else{
+                    startActivity(new Intent(getApplicationContext(),UserDetails.class));
+                    finish();
+                }
+            }
+        });
     }
 
     @Override
