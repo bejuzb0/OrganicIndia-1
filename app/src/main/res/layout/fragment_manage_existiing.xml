@@ -20,16 +20,5 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     </androidx.recyclerview.widget.RecyclerView>
-    <Button
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        android:id="@+id/save_button"
-        android:background="@drawable/button"
-        android:text="SAVE"
-        android:layout_marginVertical="5dp"
-        android:textColor="#FFF"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-    </Button>
 
 </RelativeLayout>

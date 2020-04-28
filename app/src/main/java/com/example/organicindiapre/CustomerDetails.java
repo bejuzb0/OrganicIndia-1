@@ -3,10 +3,6 @@ package com.example.organicindiapre;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
-import com.example.organicindiapre.customer.CustProduct_Subclass;
-
-import java.util.List;
-
 /**
     *Sai Gopal
     *Used to Hold Customer Details
@@ -17,7 +13,20 @@ public class CustomerDetails  {
     private String CustomerName;
     private String CustomerAddress;
     private String CustomerPhoneNumber;
+    private String CustomerUID;
 
+    CustomerDetails(String customerName, String customerAddress, String customerPhoneNumber, String customerUID) {
+        CustomerName = customerName;
+        CustomerAddress = customerAddress;
+        CustomerPhoneNumber = customerPhoneNumber;
+        CustomerUID = customerUID;
+    }
+
+    CustomerDetails(String customerName, String address, String phoneNumber) {
+        CustomerName = customerName;
+        CustomerAddress = address;
+        CustomerPhoneNumber = phoneNumber;
+    }
 
     @NonNull
     @Override
@@ -29,10 +38,16 @@ public class CustomerDetails  {
                 '}';
     }
 
-    public CustomerDetails(String customerName, String address, String phoneNumber) {
-        CustomerName = customerName;
-        CustomerAddress = address;
-        CustomerPhoneNumber = phoneNumber;
+    public CustomerDetails(String customerUID) {
+        CustomerUID = customerUID;
+    }
+
+    public String getCustomerUID() {
+        return CustomerUID;
+    }
+
+    public void setCustomerUID(String customerUID) {
+        CustomerUID = customerUID;
     }
 
     public String getCustomerName() {

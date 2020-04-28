@@ -11,7 +11,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="30dp"
-    android:layout_margin="10dp"
+    android:layout_margin="15dp"
     android:orientation="vertical">
     <TextView
         android:layout_height="wrap_content"
@@ -53,7 +53,23 @@
             android:layout_width="match_parent" />
 
     </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_margin="5dp"
+        android:background="#FFF"
+        android:hint="Address"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton">
 
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/address"
+            android:background="#FFF"
+            android:inputType="textPersonName"
+            android:maxLines="5"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent" />
+
+    </com.google.android.material.textfield.TextInputLayout>
     <com.google.android.material.textfield.TextInputLayout
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
@@ -74,6 +90,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
+        android:paddingHorizontal="5dp"
         android:layout_margin="5dp"
         android:background="#FFF"
         app:counterEnabled="true"
