@@ -56,16 +56,7 @@ public class Order_Subscription extends Fragment {
     public Order_Subscription() {
         db = FirebaseFirestore.getInstance();
     }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment Order_Subscription.
-     */
-    // TODO: Rename and change types and number of parameters
+    
     public static Order_Subscription newInstance(String param1, String param2) {
         Order_Subscription fragment = new Order_Subscription();
         Bundle args = new Bundle();
