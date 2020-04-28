@@ -38,6 +38,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.security.PrivateKey;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import static androidx.constraintlayout.widget.Constraints.TAG;
@@ -76,18 +78,18 @@ public class PendingAndExistingReqAdapter extends RecyclerView.Adapter<PendingAn
     public void onBindViewHolder(@NonNull final viewholder holder, final int position)
     {
 
-        PendingProductRef = DB.collection("Users").document(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
+        ExistingProductRef = DB.collection("Users").document(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
                 .collection("ExistingSubscription").document(arrayList.get(position).getCustomerUID())
                 .collection("Products");
 
-        ExistingProductRef = DB.collection("Users").document(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
+        //DocumentRef for
+        PendingProductRef = DB.collection("Users").document(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
                 .collection("PendingSubscription").document(arrayList.get(position).getCustomerAddress())
                 .collection("Products");
 
         //Checking which fragment
         if (fragmentName.equals("Existing"))
         {
-            //data for supplies
             product  = ExistingProductRef;
         }
         else {
@@ -134,7 +136,7 @@ public class PendingAndExistingReqAdapter extends RecyclerView.Adapter<PendingAn
                {
                    if (fragmentName.equals("Pending"))
                    {
-                       product.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                       PendingProductRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
                            @Override
                            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e)
                            {
@@ -142,15 +144,22 @@ public class PendingAndExistingReqAdapter extends RecyclerView.Adapter<PendingAn
                                for (DocumentSnapshot snapshot : queryDocumentSnapshots)
                                {
                                    Toast.makeText(context, ""+snapshot.getId(), Toast.LENGTH_SHORT).show();
-                                   DocumentReference FromRef = PendingProductRef.document(snapshot.getId());
-                                   moveFireStoreDocument(FromRef,ExistingProductRef.document(snapshot.getId()));
+                                  // moveFireStoreDocument(PendingProductRef.document(snapshot.getId()),ExistingProductRef.document(snapshot.getId()));
                                }
                            }
                        });
-
+                       Map<String ,Object> setAmount= new HashMap<>();
+                       setAmount.put("Amount",amount);
+                       DB.collection("Users").document(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
+                               .collection("PendingSubscription").document(arrayList.get(position).getCustomerAddress())
+                               .set(setAmount);
                    }
-                   else {
-
+                   else
+                   {
+                       DB.collection("Users").document(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
+                               .collection("ExistingSubscription").document(arrayList.get(position).getCustomerAddress())
+                               .update("Amount",amount);
+                       Toast.makeText(context, "Amount saved", Toast.LENGTH_SHORT).show();
                    }
                }
                else {
@@ -307,14 +316,14 @@ public class PendingAndExistingReqAdapter extends RecyclerView.Adapter<PendingAn
                         toPath.set(Objects.requireNonNull(document.getData()))
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
-                                    public void onSuccess(Void aVoid) {
+                                    public void onSuccess(Void aVoid)
+                                    {
                                         Log.d("tag", "DocumentSnapshot successfully written!");
                                         fromPath.delete()
                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                     @Override
                                                     public void onSuccess(Void aVoid) {
-                                                        Log.d(TAG, "DocumentSnapshot successfully deleted!");
-                                                        Toast.makeText(context, "Completed", Toast.LENGTH_SHORT).show();
+                                                        Toast.makeText(context, "DocumentSnapshot successfully deleted!", Toast.LENGTH_SHORT).show();
                                                     }
                                                 })
                                                 .addOnFailureListener(new OnFailureListener() {
