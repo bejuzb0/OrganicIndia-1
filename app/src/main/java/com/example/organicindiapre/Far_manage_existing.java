@@ -26,6 +26,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import static java.util.Objects.requireNonNull;
 
@@ -45,45 +46,44 @@ public class Far_manage_existing extends Fragment
 
         final ArrayList<CustomerDetails> Customerdetails = new ArrayList<>();
         String UID = requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
-        CollectionReference ExistingRef = FStore.collection("Users").document(UID)
-                .collection("ExistingSubscription");
+        CollectionReference PendingRef = FStore.collection("Subscriptions");
 
-
-        ExistingRef.get()
+        PendingRef
+                .whereEqualTo("VendorUID", Objects.requireNonNull(UID))
+                .whereEqualTo("Status","Existing")
+                .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task)
-                    {
-                            for (final QueryDocumentSnapshot RootSnapshot : requireNonNull(task.getResult()))
-                            {
-                                FStore.collection("Users")
-                                        .get()
-                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                for (QueryDocumentSnapshot snapshot : requireNonNull(task.getResult())) {
-                                                    if (snapshot.getId().equals(RootSnapshot.getId())) {
-                                                        CustomerDetails customerDetails = new CustomerDetails(
-                                                                requireNonNull(snapshot.get("FirstName")).toString(),
-                                                                requireNonNull(snapshot.get("Address")).toString(),
-                                                                requireNonNull(snapshot.get("MobileNumber")).toString(),
-                                                                snapshot.getId(),
-                                                                requireNonNull(RootSnapshot.get("Amount")).toString()
-                                                        );
-                                                        Customerdetails.add(customerDetails);
-                                                    }
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        for (final QueryDocumentSnapshot RootSnapshot : requireNonNull(task.getResult()))
+                        {
+                            final String CustomerUID = requireNonNull(RootSnapshot.get("CustomerUID")).toString();
+                            FStore.collection("Users")
+                                    .get()
+                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                            for (QueryDocumentSnapshot snapshot : requireNonNull(task.getResult()))
+                                            {
+                                                if (snapshot.getId().equals(CustomerUID))
+                                                {
+                                                    Customerdetails.add( new CustomerDetails(
+                                                            requireNonNull(snapshot.get("FirstName")).toString(),
+                                                            requireNonNull(snapshot.get("Address")).toString(),
+                                                            requireNonNull(snapshot.get("MobileNumber")).toString(),
+                                                            RootSnapshot.getId()
+                                                    ));
                                                 }
-                                                PendingAndExistingReqAdapter adapter = new PendingAndExistingReqAdapter("Existing", getActivity(), Customerdetails);
-                                                ExistingRecyclerView.setAdapter(adapter);
-                                                ExistingRecyclerView.setHasFixedSize(true);
                                             }
-                                        });
-                            }
+                                            PendingAndExistingReqAdapter adapter = new PendingAndExistingReqAdapter("Existing",getActivity(), Customerdetails);
+                                            ExistingRecyclerView.setAdapter(adapter);
+                                            ExistingRecyclerView.setHasFixedSize(true);
+                                        }
+                                    });
+                        }
+
                     }
                 });
-
-
-
         return view;
     }
 

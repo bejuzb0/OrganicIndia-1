@@ -27,6 +27,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Objects;
+
 import static java.util.Objects.requireNonNull;
 
 
@@ -52,32 +54,34 @@ public class Far_pending_requests extends Fragment
 
         final ArrayList<CustomerDetails> Customerdetails = new ArrayList<>();
         String UID = requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
-        CollectionReference PendingRef = FStore.collection("Users").document(UID)
-                .collection("PendingSubscription");
+        CollectionReference PendingRef = FStore.collection("Subscriptions");
 
-        PendingRef.get()
+        PendingRef
+                .whereEqualTo("VendorUID", Objects.requireNonNull(UID))
+                .whereEqualTo("Status","Pending")
+                .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-
-                        progressDialog.setMessage("Pending Ref Completed...");
+                    public void onComplete(@NonNull Task<QuerySnapshot> task)
+                    {
+                        progressDialog.dismiss();
                         for (final QueryDocumentSnapshot RootSnapshot : requireNonNull(task.getResult()))
                         {
+                            final String CustomerUID = RootSnapshot.get("CustomerUID").toString();
                             FStore.collection("Users")
                                    .get()
                                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                         @Override
                                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                            progressDialog.dismiss();
                                             for (QueryDocumentSnapshot snapshot : requireNonNull(task.getResult()))
                                             {
-                                                if (snapshot.getId().equals(RootSnapshot.getId()))
+                                                if (snapshot.getId().equals(CustomerUID))
                                                 {
                                                     Customerdetails.add( new CustomerDetails(
                                                             requireNonNull(snapshot.get("FirstName")).toString(),
                                                             requireNonNull(snapshot.get("Address")).toString(),
                                                             requireNonNull(snapshot.get("MobileNumber")).toString(),
-                                                            snapshot.getId()
+                                                            RootSnapshot.getId()
                                                     ));
                                                 }
                                             }
