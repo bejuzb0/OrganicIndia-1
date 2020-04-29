@@ -51,7 +51,10 @@ public class ProductFragment extends Fragment {
         rv = (RecyclerView)rootview.findViewById(R.id.productRecylcerView);
         LinearLayoutManager lv = new LinearLayoutManager(getContext());
         rv.setLayoutManager(lv);
-         l = new ArrayList<>();
+
+        //registerForContextMenu(rv);
+
+        l = new ArrayList<>();
         db = FirebaseFirestore.getInstance();
 
 
@@ -84,7 +87,7 @@ public class ProductFragment extends Fragment {
         }*/
 
        Button add = (Button)rootview.findViewById(R.id.product_add);
-        Button delete = (Button)rootview.findViewById(R.id.product_delete);
+
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,7 +105,7 @@ public class ProductFragment extends Fragment {
                         String prod_name = name.getText().toString();
                         String quant = quantity.getText().toString();
                         String ratee = rate.getText().toString();
-                        l.add(new ProductVendorClass(prod_name, "", quant,ratee));
+                        l.add(new ProductVendorClass(prod_name, user.getUid()+prod_name, ratee,quant));
                         pa.notifyDataSetChanged();
 
                         Map<String, Object> product = new HashMap<>();
@@ -139,12 +142,6 @@ public class ProductFragment extends Fragment {
             }
         });
 
-        delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
 
 
 

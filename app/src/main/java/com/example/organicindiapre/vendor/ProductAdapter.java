@@ -32,6 +32,19 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     List<ProductVendorClass> data;
+
+
+    //New Addition
+
+    public interface OnItemClickListener {
+        public void onItemClicked(int position);
+    }
+
+    public interface OnItemLongClickListener {
+        public boolean onItemLongClicked(int position);
+    }
+
+
     public ProductAdapter(List<ProductVendorClass> data) {
         this.data  = data;
     }
@@ -77,6 +90,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
                         data.remove(position);
                         data.add(new ProductVendorClass(prod_name, user.getUid()+prod_name, quant,ratee));
                         notifyDataSetChanged();
+
 
                         db.collection("Users").document(user.getUid()).collection("Products").document(user.getUid()+old_name)
                                 .delete()
@@ -125,6 +139,53 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
                 });
 
                 builder.show();
+            }
+        });
+
+        holder.mview.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(c);
+
+                final String old_name = holder.prodname.getText().toString();
+                builder.setTitle("Delete "+old_name+"?");
+                View viewInflated = LayoutInflater.from(c).inflate(R.layout.delete_vendor_product, (ViewGroup) v.findViewById(R.id.content), false);
+                //Toast.makeText(c, "Long click", Toast.LENGTH_SHORT).show();
+                builder.setView(viewInflated);
+
+                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        data.remove(position);
+                        notifyDataSetChanged();
+
+                        db.collection("Users").document(user.getUid()).collection("Products").document(user.getUid()+old_name)
+                                .delete()
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.d(TAG, "DocumentSnapshot successfully deleted!");
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.w(TAG, "Error deleting document", e);
+                                    }
+                                });
+
+                    }
+                });
+                builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                builder.show();
+                return true;
             }
         });
 
