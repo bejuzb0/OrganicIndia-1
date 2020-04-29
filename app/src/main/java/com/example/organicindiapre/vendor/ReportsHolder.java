@@ -8,6 +8,14 @@ public class ReportsHolder
     private String To;
     private String CustomerID;
 
+    public String getCustomerID() {
+        return CustomerID;
+    }
+
+    public void setCustomerID(String customerID) {
+        CustomerID = customerID;
+    }
+
     public ReportsHolder(String amount, String revenue, String from, String to, String customerID) {
         Amount = amount;
         Revenue = revenue;

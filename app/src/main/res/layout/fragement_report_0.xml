@@ -8,15 +8,35 @@
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:padding="10dp">
+
+        <TextView
+            android:id="@+id/Revenue_Amount_text"
+            android:text="Revenue and Amount"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        </TextView>
         <androidx.recyclerview.widget.RecyclerView
+            android:layout_below="@+id/Revenue_Amount_text"
             android:id="@+id/Revenue_Amount_recycler"
             android:layout_width ="match_parent"
-            android:layout_height="150dp">
+            android:layout_marginTop="10dp"
+            android:layout_height="130dp">
         </androidx.recyclerview.widget.RecyclerView>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_marginTop="20dp"
+        <TextView
+            android:text="No Delivery Reports"
             android:layout_below="@+id/Revenue_Amount_recycler"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/no_delivery_text"
+            android:textSize="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        </TextView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/no_delivery_text"
             android:id="@+id/no_delivery_recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent">

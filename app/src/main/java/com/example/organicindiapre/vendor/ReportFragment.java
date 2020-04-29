@@ -1,55 +1,121 @@
 package com.example.organicindiapre.vendor;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.example.organicindiapre.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.ArrayList;
+import java.util.Objects;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class ReportFragment extends Fragment {
 
+    FirebaseFirestore DB;
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragement_report_0, container,false);
 
-        RecyclerView noDelivery = view.findViewById(R.id.no_delivery_recycler);
-        RecyclerView revenueAmount = view.findViewById(R.id.Revenue_Amount_recycler);
+        final RecyclerView noDelivery = view.findViewById(R.id.no_delivery_recycler);
+        final RecyclerView revenueAmount = view.findViewById(R.id.Revenue_Amount_recycler);
 
-        ArrayList<ReportsHolder> noDeliveryArrayList = new ArrayList<>();
-        ArrayList<ReportsHolder> revenueArrayList = new ArrayList<>();
+        final ArrayList<ReportsHolder> noDeliveryArrayList = new ArrayList<>();
+        final ArrayList<ReportsHolder> revenueArrayList = new ArrayList<>();
+
+        DB = FirebaseFirestore.getInstance();
+
+        String UID = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
+        final CollectionReference ReportRef = DB.collection("Reports").document(UID).collection("Customers");
 
         LinearLayoutManager linearLayout = new LinearLayoutManager(getContext());
         LinearLayoutManager Layout = new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false);
         noDelivery.setLayoutManager(linearLayout);
         revenueAmount.setLayoutManager(Layout);
 
-        for (int i = 0;i<=6;i++)
-        {
-            ReportsHolder reportsHolder = new ReportsHolder("from"+i,"to","cudid"+i);
-            noDeliveryArrayList.add(reportsHolder);
-        }
+        ReportRef.get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task)
+                    {
+                        if (task.isSuccessful())
+                        {
+                            for (final QueryDocumentSnapshot snapshot: Objects.requireNonNull(task.getResult()))
+                            {
+                                if (snapshot.exists())
+                                {
+                                    ReportsHolder reportsHolder = new ReportsHolder(
+                                            Objects.requireNonNull(snapshot.get("Amount")).toString()
+                                            , Objects.requireNonNull(snapshot.get("Revenue")).toString());
+                                    revenueArrayList.add(reportsHolder);
+                                    ReportRef.document(snapshot.getId()).collection("NoDelivery")
+                                            .get()
+                                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<QuerySnapshot> task)
+                                                {
+                                                    if (task.isSuccessful()){
+                                                        Toast.makeText(getContext(), "done", Toast.LENGTH_SHORT).show();
+                                                        for (QueryDocumentSnapshot snapshot1 : Objects.requireNonNull(task.getResult())){
+                                                            ReportsHolder reportsHolder = new ReportsHolder(
+                                                                    Objects.requireNonNull(snapshot1.get("From")).toString(),
+                                                                    Objects.requireNonNull(snapshot1.get("To")).toString(),
+                                                                    "Customer UID : "+snapshot.getId()
+                                                            );
+                                                            noDeliveryArrayList.add(reportsHolder);
+                                                        }
+                                                        NoDeliveryAdapter noDeliveryAdapter = new NoDeliveryAdapter(noDeliveryArrayList);
+                                                        noDelivery.setAdapter(noDeliveryAdapter);
+                                                        noDelivery.setHasFixedSize(true);
+                                                    }
+                                                }
+                                            });
+                                }
 
-        NoDeliveryAdapter noDeliveryAdapter = new NoDeliveryAdapter(noDeliveryArrayList);
-        noDelivery.setAdapter(noDeliveryAdapter);
-        noDelivery.setHasFixedSize(true);
+                            }
+                            RevenueAdapter revenueAdapter = new RevenueAdapter(revenueArrayList);
+                            revenueAmount.setAdapter(revenueAdapter) ;
+                            revenueAmount.setHasFixedSize(true);
+                        }
+                        else {
+                            Toast.makeText(getActivity(), ""+task.getException(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
 
-        for (int i = 0;i<=8;i++)
+
+
+       /* for (int i = 0;i<=8;i++)
         {
             ReportsHolder reportsHolder = new ReportsHolder("amount"+i,"revenue");
             revenueArrayList.add(reportsHolder);
         }
 
-         RevenueAdapter revenueAdapter = new RevenueAdapter(revenueArrayList);
-         revenueAmount.setAdapter(revenueAdapter) ;
-         revenueAmount.setHasFixedSize(true);
+        */
+
+
 
         return view;
     }
@@ -74,8 +140,9 @@ public class ReportFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull NoDeliveryViewHolder holder, int position) {
 
-            holder.from.setText(reportsHolders.get(position).getFrom());
-            holder.to.setText(reportsHolders.get(position).getTo());
+            holder.from.setText("From : " +reportsHolders.get(position).getFrom());
+            holder.to.setText("To : "+reportsHolders.get(position).getTo());
+            holder.customerName.setText(reportsHolders.get(position).getCustomerID());
 
         }
 
@@ -85,11 +152,12 @@ public class ReportFragment extends Fragment {
         }
 
         static class NoDeliveryViewHolder extends RecyclerView.ViewHolder {
-            TextView from,to;
+            TextView from,to,customerName;
             NoDeliveryViewHolder(@NonNull View itemView) {
                 super(itemView);
                 from = itemView.findViewById(R.id.from);
                 to = itemView.findViewById(R.id.to);
+                customerName = itemView.findViewById(R.id.customer_name);
             }
         }
     }
@@ -112,8 +180,8 @@ public class ReportFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull RevenueViewHolder holder, int position)
         {
-            holder.amount.setText(holders.get(position).getAmount());
-            holder.revenue.setText(holders.get(position).getRevenue());
+            holder.amount.setText("Amount : "+holders.get(position).getAmount());
+            holder.revenue.setText("Revenue : "+holders.get(position).getRevenue());
         }
 
         @Override
