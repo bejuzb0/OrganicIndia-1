@@ -2,6 +2,7 @@ package com.example.organicindiapre;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Build;
@@ -127,6 +128,7 @@ public class PendingAndExistingReqAdapter extends RecyclerView.Adapter<PendingAn
 
         holder.Cname.setText(arrayList.get(position).getCustomerName());
         holder.Cadd.setText(arrayList.get(position).getCustomerAddress()+" : "+arrayList.get(position).getCustomerPhoneNumber());
+        holder.amount.setText(arrayList.get(position).getAmount());
 
         //Activate button for both activate  and save
         holder.activate.setOnClickListener(new View.OnClickListener() {
@@ -144,8 +146,25 @@ public class PendingAndExistingReqAdapter extends RecyclerView.Adapter<PendingAn
                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                        for (DocumentSnapshot snapshot : Objects.requireNonNull(task.getResult()))
                                        {
-                                           moveFireStoreDocument(PendingProductRef.document(snapshot.getId()),ExistingProductRef.document(snapshot.getId()));
+                                           moveFireStoreDocument(PendingProductRef.document(snapshot.getId()),
+                                                   ExistingProductRef.document(snapshot.getId()));
                                        }
+                                       DB.collection("Users").document(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
+                                               .collection("PendingSubscription").document(arrayList.get(position).getCustomerUID())
+                                               .delete()
+                                               .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                   @Override
+                                                   public void onComplete(@NonNull Task<Void> task) {
+                                                       if (task.isSuccessful())
+                                                       {
+                                                           Toast.makeText(context, "completed", Toast.LENGTH_SHORT).show();
+                                                       }
+                                                       else {
+                                                           Toast.makeText(context, ""+task.getException(), Toast.LENGTH_SHORT).show();
+                                                       }
+                                                   }
+                                               });
+
                                    }
                                });
                        Map<String ,Object> setAmount= new HashMap<>();
@@ -226,6 +245,7 @@ public class PendingAndExistingReqAdapter extends RecyclerView.Adapter<PendingAn
             {
                 delete.setVisibility(View.GONE);
                 activate.setText("Activate");
+                amount.setText("Enter Final Amount");
             }
         }
     }
@@ -290,6 +310,7 @@ public class PendingAndExistingReqAdapter extends RecyclerView.Adapter<PendingAn
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
+
                         if (task.isSuccessful()){
                             Toast.makeText(context, "Deleted", Toast.LENGTH_SHORT).show();
                             context.recreate();
@@ -304,6 +325,9 @@ public class PendingAndExistingReqAdapter extends RecyclerView.Adapter<PendingAn
 
     private void moveFireStoreDocument(final DocumentReference fromPath, final DocumentReference toPath)
     {
+        final ProgressDialog progressDialog = new ProgressDialog(context);
+        progressDialog.setMessage("Please wait...");
+        progressDialog.show();
         fromPath.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -317,17 +341,6 @@ public class PendingAndExistingReqAdapter extends RecyclerView.Adapter<PendingAn
                                         public void onSuccess(Void aVoid)
                                         {
                                             Toast.makeText(context, "Document add successful", Toast.LENGTH_SHORT).show();
-                                            //want to remove document after written completed
-                                           fromPath.delete()
-                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                        @Override
-                                                        public void onComplete(@NonNull Task<Void> task)
-                                                        {
-                                                            Toast.makeText(context, "Document deleted successful", Toast.LENGTH_SHORT).show();
-                                                            context.recreate();
-                                                        }
-                                                    });
-
                                         }
                                     })
                                     .addOnFailureListener(new OnFailureListener() {

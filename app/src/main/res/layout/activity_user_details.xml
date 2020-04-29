@@ -93,7 +93,6 @@
         android:paddingHorizontal="5dp"
         android:layout_margin="5dp"
         android:background="#FFF"
-        app:counterEnabled="true"
         app:passwordToggleTint="@color/colorPrimary"
         android:hint="Conform Password"
         app:passwordToggleEnabled="true">
@@ -112,12 +111,12 @@
         android:layout_width="match_parent"
         android:layout_margin="5dp"
         app:passwordToggleTint="@color/colorPrimary"
-        android:hint="Conform Password"
         android:background="#FFF"
         app:passwordToggleEnabled="true">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/conform_password"
             android:background="#FFF"
+            android:hint="Conform Password"
             android:inputType="textPassword"
             android:layout_height="wrap_content"
             android:layout_width="match_parent" />

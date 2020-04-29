@@ -14,6 +14,23 @@ public class CustomerDetails  {
     private String CustomerAddress;
     private String CustomerPhoneNumber;
     private String CustomerUID;
+    private String Amount;
+
+    public String getAmount() {
+        return Amount;
+    }
+
+    public void setAmount(String amount) {
+        Amount = amount;
+    }
+
+    public CustomerDetails(String customerName, String customerAddress, String customerPhoneNumber, String customerUID, String amount) {
+        CustomerName = customerName;
+        CustomerAddress = customerAddress;
+        CustomerPhoneNumber = customerPhoneNumber;
+        CustomerUID = customerUID;
+        Amount = amount;
+    }
 
     CustomerDetails(String customerName, String customerAddress, String customerPhoneNumber, String customerUID) {
         CustomerName = customerName;

@@ -1,5 +1,6 @@
 package com.example.organicindiapre;
 
+import android.app.ProgressDialog;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -45,6 +46,9 @@ public class Far_pending_requests extends Fragment
         pendingReqRecyclerView.setLayoutManager(linearLayout);
 
         final FirebaseFirestore FStore = FirebaseFirestore.getInstance();
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage("Loading...");
+        progressDialog.show();
 
         final ArrayList<CustomerDetails> Customerdetails = new ArrayList<>();
         String UID = requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
@@ -56,6 +60,7 @@ public class Far_pending_requests extends Fragment
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
+                        progressDialog.setMessage("Pending Ref Completed...");
                         for (final QueryDocumentSnapshot RootSnapshot : requireNonNull(task.getResult()))
                         {
                             FStore.collection("Users")
@@ -63,16 +68,17 @@ public class Far_pending_requests extends Fragment
                                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                         @Override
                                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                            for (QueryDocumentSnapshot snapshot : requireNonNull(task.getResult())) {
+                                            progressDialog.dismiss();
+                                            for (QueryDocumentSnapshot snapshot : requireNonNull(task.getResult()))
+                                            {
                                                 if (snapshot.getId().equals(RootSnapshot.getId()))
                                                 {
-                                                    CustomerDetails customerDetails = new CustomerDetails(
+                                                    Customerdetails.add( new CustomerDetails(
                                                             requireNonNull(snapshot.get("FirstName")).toString(),
                                                             requireNonNull(snapshot.get("Address")).toString(),
                                                             requireNonNull(snapshot.get("MobileNumber")).toString(),
                                                             snapshot.getId()
-                                                    );
-                                                    Customerdetails.add(customerDetails);
+                                                    ));
                                                 }
                                             }
                                             PendingAndExistingReqAdapter adapter = new PendingAndExistingReqAdapter("Pending",getActivity(), Customerdetails);

@@ -5,6 +5,7 @@
     android:layout_height="match_parent">
 
     <RelativeLayout
+        android:visibility="gone"
         android:id="@+id/RelativeLayout"
         android:layout_height="40dp"
         android:layout_width="match_parent">
