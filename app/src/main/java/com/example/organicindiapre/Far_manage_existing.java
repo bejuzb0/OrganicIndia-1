@@ -39,7 +39,6 @@ public class Far_manage_existing extends Fragment
 
         final RecyclerView ExistingRecyclerView = view.findViewById(R.id.pending_req_recyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        //LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false);
         ExistingRecyclerView.setLayoutManager(layoutManager);
 
         final FirebaseFirestore FStore = FirebaseFirestore.getInstance();

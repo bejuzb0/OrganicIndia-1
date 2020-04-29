@@ -3,6 +3,7 @@ package com.example.organicindiapre.vendor;
 import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.DocumentsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -55,6 +57,7 @@ public class ReportFragment extends Fragment {
         noDelivery.setLayoutManager(linearLayout);
         revenueAmount.setLayoutManager(Layout);
 
+        //Getting Data
         ReportRef.get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -67,42 +70,50 @@ public class ReportFragment extends Fragment {
                             {
                                 if (snapshot.exists())
                                 {
+                                    //Adding Amount and revenue to the adapter according to Customer
                                     final ReportsHolder reportsHolder = new ReportsHolder(
                                             Objects.requireNonNull(snapshot.get("Amount")).toString()
                                             , Objects.requireNonNull(snapshot.get("Revenue")).toString());
                                     revenueArrayList.add(reportsHolder);
+
+                                    //Getting NoDelivery Data from Database
                                     ReportRef.document(snapshot.getId()).collection("NoDelivery")
                                             .get()
                                             .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                                 @Override
                                                 public void onComplete(@NonNull Task<QuerySnapshot> task)
                                                 {
+
                                                     if (task.isSuccessful()){
                                                         for (final QueryDocumentSnapshot snapshot1 : Objects.requireNonNull(task.getResult()))
                                                         {
-                                                            Toast.makeText(getContext(), ""+snapshot.getId(), Toast.LENGTH_SHORT).show();
-                                                            DB.collection("Users").get()
-                                                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+
+                                                            //getting Users Name from Database
+                                                            DB.collection("Users")
+                                                                    .document(snapshot.getId())
+                                                                    .get()
+                                                                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                                                         @Override
-                                                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                                            for (QueryDocumentSnapshot snapshot2 : Objects.requireNonNull(task.getResult()))
+                                                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                                            if (task.isSuccessful())
                                                                             {
-                                                                                if (snapshot2.getId().equals(snapshot.getId()))
-                                                                                {
-                                                                                    Toast.makeText(getContext(), "Done", Toast.LENGTH_SHORT).show();
-                                                                                    ReportsHolder reportsHolder = new ReportsHolder(
-                                                                                            Objects.requireNonNull(snapshot1.get("From")).toString(),
-                                                                                            Objects.requireNonNull(snapshot1.get("To")).toString(),
-                                                                                            Objects.requireNonNull(snapshot2.get("FirstName")).toString()
-                                                                                    );
-                                                                                    noDeliveryArrayList.add(reportsHolder);
-                                                                                }
+
+                                                                                DocumentSnapshot documentSnapshot = task.getResult();
+                                                                                Toast.makeText(getContext(), "Done", Toast.LENGTH_SHORT).show();
+                                                                                assert documentSnapshot != null;
+                                                                                ReportsHolder reportsHolder = new ReportsHolder(
+                                                                                        Objects.requireNonNull(snapshot1.get("From")).toString(),
+                                                                                        Objects.requireNonNull(snapshot1.get("To")).toString(),
+                                                                                        Objects.requireNonNull(documentSnapshot.get("FirstName")).toString()
+                                                                                );
+                                                                                noDeliveryArrayList.add(reportsHolder);
+                                                                                NoDeliveryAdapter noDeliveryAdapter = new NoDeliveryAdapter(noDeliveryArrayList);
+                                                                                noDelivery.setAdapter(noDeliveryAdapter);
+                                                                                noDelivery.setHasFixedSize(true);
                                                                             }
-                                                                            NoDeliveryAdapter noDeliveryAdapter = new NoDeliveryAdapter(noDeliveryArrayList);
-                                                                            noDelivery.setAdapter(noDeliveryAdapter);
-                                                                            noDelivery.setHasFixedSize(true);
                                                                         }
                                                                     });
+
                                                         }
                                                     }
                                                 }
@@ -110,6 +121,7 @@ public class ReportFragment extends Fragment {
                                 }
 
                             }
+
                             RevenueAdapter revenueAdapter = new RevenueAdapter(revenueArrayList);
                             revenueAmount.setAdapter(revenueAdapter) ;
                             revenueAmount.setHasFixedSize(true);
