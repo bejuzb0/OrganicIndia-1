@@ -14,12 +14,15 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -31,57 +34,55 @@ public class Far_manage_existing extends Fragment
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable final Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_manage_existiing, container,false);
 
         final RecyclerView ExistingRecyclerView = view.findViewById(R.id.pending_req_recyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         ExistingRecyclerView.setLayoutManager(layoutManager);
 
+        final FirebaseFirestore FStore = FirebaseFirestore.getInstance();
+
         final ArrayList<CustomerDetails> Customerdetails = new ArrayList<>();
         String UID = requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
-        final FirebaseFirestore FStore = FirebaseFirestore.getInstance();
-        CollectionReference PendingRef = FStore.collection("Users").document(UID)
+        CollectionReference ExistingRef = FStore.collection("Users").document(UID)
                 .collection("ExistingSubscription");
 
 
-        PendingRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e)
-            {
-                assert queryDocumentSnapshots != null;
-                if (queryDocumentSnapshots.getDocuments().isEmpty()){
-                        Toast.makeText(getContext(), "No records found", Toast.LENGTH_SHORT).show();
-                }
-                else {
-                    for (final DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
-                        FStore.collection("Users")
-                                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                                        assert queryDocumentSnapshots != null;
-                                        if (!queryDocumentSnapshots.getDocuments().isEmpty()) {
-                                            for (DocumentSnapshot snapshot : queryDocumentSnapshots) {
-                                                if (snapshot.getId().equals(document.getId())) {
-                                                    CustomerDetails customerDetails = new CustomerDetails(requireNonNull(snapshot.get("FirstName")).toString(), snapshot.getId(),
-                                                            requireNonNull(snapshot.get("MobileNumber")).toString(),snapshot.getId());
-                                                    Customerdetails.add(customerDetails);
+        ExistingRef.get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task)
+                    {
+                            for (final QueryDocumentSnapshot RootSnapshot : requireNonNull(task.getResult()))
+                            {
+                                Toast.makeText(getContext(), "" + RootSnapshot.getId(), Toast.LENGTH_SHORT).show();
+                                FStore.collection("Users")
+                                        .get()
+                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                Toast.makeText(getContext(), ""+task.getException(), Toast.LENGTH_SHORT).show();
+                                                for (QueryDocumentSnapshot snapshot : requireNonNull(task.getResult())) {
+                                                    if (snapshot.getId().equals(RootSnapshot.getId())) {
+                                                        CustomerDetails customerDetails = new CustomerDetails(
+                                                                requireNonNull(snapshot.get("FirstName")).toString(),
+                                                                requireNonNull(snapshot.get("Address")).toString(),
+                                                                requireNonNull(snapshot.get("MobileNumber")).toString(),
+                                                                snapshot.getId()
+                                                        );
+                                                        Toast.makeText(getContext(), ""+snapshot.getId(), Toast.LENGTH_SHORT).show();
+                                                        Customerdetails.add(customerDetails);
+                                                    }
                                                 }
+                                                PendingAndExistingReqAdapter adapter = new PendingAndExistingReqAdapter("Existing", getActivity(), Customerdetails);
+                                                ExistingRecyclerView.setAdapter(adapter);
+                                                ExistingRecyclerView.setHasFixedSize(true);
                                             }
-                                            PendingAndExistingReqAdapter adapter = new PendingAndExistingReqAdapter("Existing", getContext(), Customerdetails);
-                                            ExistingRecyclerView.setAdapter(adapter);
-                                            ExistingRecyclerView.setHasFixedSize(true);
-                                        } else {
-                                            Toast.makeText(getContext(), "No records found", Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                });
+                                        });
+                            }
                     }
-                }
-
-
-            }
-        });
+                });
 
 
 

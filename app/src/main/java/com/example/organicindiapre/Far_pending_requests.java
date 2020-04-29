@@ -13,12 +13,16 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -42,47 +46,44 @@ public class Far_pending_requests extends Fragment
 
         final FirebaseFirestore FStore = FirebaseFirestore.getInstance();
 
-
-
         final ArrayList<CustomerDetails> Customerdetails = new ArrayList<>();
         String UID = requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
         CollectionReference PendingRef = FStore.collection("Users").document(UID)
                 .collection("PendingSubscription");
 
-        PendingRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e)
-            {
-                assert queryDocumentSnapshots != null;
-                if (queryDocumentSnapshots.getDocuments().isEmpty()) {
-                    Toast.makeText(getContext(), "No records found", Toast.LENGTH_SHORT).show();
-                }
-                else {
-                    for (final DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
-                        FStore.collection("Users")
-                                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                                        assert queryDocumentSnapshots != null;
-                                        for (DocumentSnapshot snapshot : queryDocumentSnapshots) {
-                                            if (snapshot.getId().equals(document.getId())) {
-                                                CustomerDetails customerDetails = new CustomerDetails(requireNonNull(snapshot.get("FirstName")).toString(), snapshot.getId(),
-                                                        requireNonNull(snapshot.get("MobileNumber")).toString(),snapshot.getId());
-                                                Customerdetails.add(customerDetails);
+        PendingRef.get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                        for (final QueryDocumentSnapshot RootSnapshot : requireNonNull(task.getResult()))
+                        {
+                            FStore.collection("Users")
+                                   .get()
+                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                            for (QueryDocumentSnapshot snapshot : requireNonNull(task.getResult())) {
+                                                if (snapshot.getId().equals(RootSnapshot.getId()))
+                                                {
+                                                    CustomerDetails customerDetails = new CustomerDetails(
+                                                            requireNonNull(snapshot.get("FirstName")).toString(),
+                                                            requireNonNull(snapshot.get("Address")).toString(),
+                                                            requireNonNull(snapshot.get("MobileNumber")).toString(),
+                                                            snapshot.getId()
+                                                    );
+                                                    Customerdetails.add(customerDetails);
+                                                }
                                             }
+                                            PendingAndExistingReqAdapter adapter = new PendingAndExistingReqAdapter("Pending",getActivity(), Customerdetails);
+                                            pendingReqRecyclerView.setAdapter(adapter);
+                                            pendingReqRecyclerView.setHasFixedSize(true);
                                         }
-                                        PendingAndExistingReqAdapter adapter = new PendingAndExistingReqAdapter("Pending", getContext(), Customerdetails);
-                                        pendingReqRecyclerView.setAdapter(adapter);
-                                        pendingReqRecyclerView.setHasFixedSize(true);
+                                    });
+                        }
 
-                                    }
-                                });
                     }
-                }
-
-            }
-        });
-
+                });
 
         return view;
     }
