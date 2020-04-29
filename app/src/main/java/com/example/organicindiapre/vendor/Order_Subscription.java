@@ -12,10 +12,12 @@ import com.example.organicindiapre.R;
 import com.example.organicindiapre.customer.CustProduct_Subclass;
 import com.example.organicindiapre.customer.CustomerClass;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -56,16 +58,7 @@ public class Order_Subscription extends Fragment {
     public Order_Subscription() {
         db = FirebaseFirestore.getInstance();
     }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment Order_Subscription.
-     */
-    // TODO: Rename and change types and number of parameters
+    
     public static Order_Subscription newInstance(String param1, String param2) {
         Order_Subscription fragment = new Order_Subscription();
         Bundle args = new Bundle();
@@ -84,106 +77,17 @@ public class Order_Subscription extends Fragment {
         }
     }
 
-   /* @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_order__subscription_0, container, false);
-        recyclerView = (RecyclerView)rootView.findViewById(R.id.recycViewSubscription);
-        linearLayoutManager = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(linearLayoutManager);
-        ItemAdapter itemAdapter = new ItemAdapter(bu)
-        recyclerView.setAdapter();
-
-        /* Adding Customer Data in Recycler View from Firebase
-
-        final List<CustomerClass> itemList = new ArrayList<>();
-            final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-        Log.d(TAG, user.getUid());
-
-        CollectionReference users = db.collection("Users").document(user.getUid()).collection("Order_Subscription");
-        /*users.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-
-                                final Map<String, Object> m = document.getData();
-
-                                /* Getting Subitem for the current Customer
-                                Log.d(TAG, "Reached before subtask"+document.getId().toString());
-                                Log.d(TAG, document.getId().toString());
-                                CollectionReference orders = db.collection("Users").document(user.getUid()).collection("Order_Subscription").document(document.getId().toString()).collection("OrdersByCustomer");
-                                final List<CustProduct_Subclass> subItemList = new ArrayList<>();
-                                orders.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-
-                                            @Override
-                                            public void onComplete(@NonNull Task<QuerySnapshot> subtask) {
-                                                Log.d(TAG, "Reached inside subtask");
-                                                if (subtask.isSuccessful()) {
-                                                    for (QueryDocumentSnapshot subdocument : subtask.getResult()) {
-                                                        Log.d(TAG, "DocumentSnapshot Subdata: " + subdocument.getData());
-
-                                                        Map<String, Object> n = subdocument.getData();
-
-                                                        Log.d(TAG,"Name"+n.get("ProductName").toString());
-                                                        CustProduct_Subclass subItem = new CustProduct_Subclass(n.get("ProductName").toString(), n.get("Quantity").toString(), n.get("Amount").toString(), n.get("Description").toString(), n.get("Delivered").toString());
-                                                        subItemList.add(subItem);
-                                                        n.clear();
-                                                    }
-                                                    //Log.d(TAG,"Name"+m.get("CustomerName").toString());
-                                                    Log.d(TAG, "sublistsize"+subItemList.size()+"");
-                                                    if (m.get("CustomerName") != null && m.get("Address") != null && m.get("Address") != null && m.get("MobileNumber") != null)
-                                                    {
-                                                        customerClass = new CustomerClass(m.get("CustomerName").toString(), m.get("Address").toString(), m.get("MobileNumber").toString(), subItemList);
-                                                        Log.d(TAG, customerClass.toString());
-                                                        itemList.add(customerClass);
-                                                    }
-
-
-                                                } else {
-                                                    Log.d(TAG,  "Reached inside subtask");
-                                                    Log.d(TAG, "Error getting documents.", subtask.getException());
-                                                }
-                                            }
-                                        });
-
-
-                                /* Subitem part done
-
-                                Log.d(TAG, "Finished Subtask");
-                                m.clear();
-
-                            }
-                            Log.d(TAG, "listsize"+itemList.size()+"");
-                            itemAdapter = new ItemAdapter(itemList);
-                            recyclerView.setAdapter(itemAdapter);
-
-
-
-
-                        } else {
-                            Log.w(TAG, "Error getting documents.", task.getException());
-                        }
-                    }
-                });
-
-
-
-       // ItemAdapter itemAdapter = new ItemAdapter(buildItemList());
-        return rootView;
-    }*/
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View rootView = inflater.inflate(R.layout.fragment_order__subscription_0, container, false);
-
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         final List<CustomerClass> itemList = new ArrayList<>();
-
+        final RecyclerView recyclerView = (RecyclerView)rootView.findViewById(R.id.recycViewSubscription);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(linearLayoutManager);
+        final List<CustomerClass> customerlist = new ArrayList<CustomerClass>();
         CollectionReference users = db.collection("Users").document(user.getUid()).collection("Order_Subscription");
         users.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -192,81 +96,34 @@ public class Order_Subscription extends Fragment {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                                 final Map<String, Object> m = document.getData();
+
+                                List<String> productName = (List<String>) document.get("ProductName");
+                                List<String> quant = (List<String>) document.get("Quantity");
+                                List<String> amnt = (List<String>) document.get("Rate");
+
+
+                                List<CustProduct_Subclass> subclass = new ArrayList<CustProduct_Subclass>();
+
+                                for(int i=0; i<productName.size(); i++) {
+                                    subclass.add(new CustProduct_Subclass(productName.get(i).toString(), quant.get(i).toString(), amnt.get(i).toString(), "", ""));
+                                }
+                                CustomerClass obj = new CustomerClass(m.get("CustomerName").toString(), m.get("Address").toString(), m.get("PhoneNumber").toString(), subclass);
                                 Log.d(TAG, document.getId().toString());
-                                customerClass = new CustomerClass(m.get("CustomerName").toString(), m.get("Address").toString(), m.get("MobileNumber").toString());
-                                /*Code for subitem */
-                                final List<CustProduct_Subclass> subItemList = new ArrayList<>();
-                              /*  CollectionReference orders = db.collection("Users").document(user.getUid()).collection("Order_Subscription").document(document.getId().toString()).collection("OrdersByCustomer");
-
-
-                                orders.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<QuerySnapshot> subtask) {
-                                        Log.d(TAG, "Reached inside subtask");
-                                        if (subtask.isSuccessful()) {
-                                            for (QueryDocumentSnapshot subdocument : subtask.getResult()) {
-                                                Log.d(TAG, "DocumentSnapshot Subdata: " + subdocument.getData());
-                                                Map<String, Object> n = subdocument.getData();
-                                                Log.d(TAG,"Name"+n.get("ProductName").toString());
-                                                CustProduct_Subclass subItem = new CustProduct_Subclass(n.get("ProductName").toString(), n.get("Quantity").toString(), n.get("Amount").toString(), n.get("Description").toString(), n.get("Delivered").toString());
-                                                subItemList.add(subItem);
-                                                n.clear();
-                                            }
-                                            //Log.d(TAG,"Name"+m.get("CustomerName").toString());
-                                            Log.d(TAG, "sublistsize"+subItemList.size()+"");
-                                            //if (m.get("CustomerName") != null && m.get("Address") != null && m.get("Address") != null && m.get("MobileNumber") != null)
-                                           // {
-                                                customerClass.setProductList(subItemList);
-                                                Log.d(TAG, customerClass.toString());
-                                                itemList.add(customerClass);
-                                                //itemAdapter = new ItemAdapter(itemList);
-                                                //recyclerView.setAdapter(itemAdapter);
-                                            //}
-
-
-                                        } else {
-                                            Log.d(TAG,  "Reached inside subtask");
-                                            Log.d(TAG, "Error getting documents.", subtask.getException());
-                                        }
-                                    }
-                                });
-
-                                */
-
-
-                                customerClass.setProductList(buildProductList());
-                                itemList.add(customerClass);
-                                //customerClass = new CustomerClass(m.get("CustomerName").toString(), m.get("Address").toString(), m.get("MobileNumber").toString(), buildProductList());
-                                Log.d(TAG, customerClass.toString());
-                                //itemList.add(customerClass);
-                                m.clear();
-
+                                customerlist.add(obj);
                             }
-
-                            Log.d(TAG, "listsize"+itemList.size()+"");
-                            final RecyclerView recyclerView = (RecyclerView)rootView.findViewById(R.id.recycViewSubscription);
-                            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-                            recyclerView.setLayoutManager(linearLayoutManager);
-                            itemAdapter = new ItemAdapter(itemList);
+                            itemAdapter = new ItemAdapter(customerlist);
                             recyclerView.setAdapter(itemAdapter);
-
-
-
+                            itemAdapter.notifyDataSetChanged();
 
                         } else {
                             Log.w(TAG, "Error getting documents.", task.getException());
                         }
                     }
                 });
-
-
-
-
-        //ItemAdapter itemAdapter = new ItemAdapter(buildItemList());
-        //recyclerView.setAdapter(itemAdapter);
-
         return rootView;
     }
+
+
     // Code to generate 10 random Customer with each 3 products
     private List<CustomerClass> buildItemList() {
         List<CustomerClass> itemList = new ArrayList<>();
