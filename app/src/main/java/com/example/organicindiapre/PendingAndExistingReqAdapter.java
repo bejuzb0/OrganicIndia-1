@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Build;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,14 +19,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -37,12 +31,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import static android.view.View.generateViewId;
-import static androidx.constraintlayout.widget.Constraints.TAG;
-
 /**
- * Sai gopal Adapter for both pending and existing Subscription for both user and products
- * second adapter for products
+ * Sai gopal Adapter for both pending and existing Subscription for both users
  */
 
 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -53,7 +43,6 @@ public class PendingAndExistingReqAdapter extends RecyclerView.Adapter<PendingAn
     private ArrayList<CustomerDetails> arrayList;
     private FirebaseFirestore DB = FirebaseFirestore.getInstance();
     private CollectionReference SubscriptionRef;
-    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     PendingAndExistingReqAdapter(String fragmentName, Activity context, ArrayList<CustomerDetails> arrayList) {
         this.fragmentName = fragmentName;
@@ -86,7 +75,7 @@ public class PendingAndExistingReqAdapter extends RecyclerView.Adapter<PendingAn
                         {
                             for (final QueryDocumentSnapshot snapshot : Objects.requireNonNull(task.getResult()))
                             {
-                                if (snapshot.getId().equals(arrayList.get(position).getCustomerUID()))
+                                if (snapshot.getId().equals(arrayList.get(position).getSubscriptionID()))
                                 {
                                     SubscriptionRef.document(snapshot.getId()).collection("Products")
                                             .get()
@@ -191,7 +180,7 @@ public class PendingAndExistingReqAdapter extends RecyclerView.Adapter<PendingAn
                             {
                                 progressDialog.setTitle("Deleting");
                                 progressDialog.show();
-                               SubscriptionRef.document(arrayList.get(position).getCustomerUID())
+                               SubscriptionRef.document(arrayList.get(position).getSubscriptionID())
                                        .delete()
                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
                                            @Override
@@ -245,57 +234,6 @@ public class PendingAndExistingReqAdapter extends RecyclerView.Adapter<PendingAn
         }
     }
 
-
-    public static class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHolder>{
-
-
-        private ArrayList<ProductDetails> productDetailsArrayList;
-
-        ProductAdapter(ArrayList<ProductDetails> productDetailsArrayList) {
-            this.productDetailsArrayList = productDetailsArrayList;
-        }
-
-        @NonNull
-        @Override
-        public viewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.items_product_ist,parent,false);
-            return new viewHolder(view);
-        }
-
-        @SuppressLint("SetTextI18n")
-        @Override
-        public void onBindViewHolder(@NonNull final viewHolder holder, final int position)
-        {
-            final String Name = productDetailsArrayList.get(position).getName();
-            final String Price = productDetailsArrayList.get(position).getProductPrice();
-            final String Quantity = productDetailsArrayList.get(position).getProductQuantity();
-            holder.Name.setText(Name);
-            holder.Quantity.setText(Quantity);
-            holder.Price.setText(Price);
-
-        }
-
-
-        @Override
-        public int getItemCount() {
-            return productDetailsArrayList.size();
-        }
-
-        static class viewHolder extends RecyclerView.ViewHolder{
-            TextView Name,Quantity,Price;
-
-            viewHolder(@NonNull View itemView) {
-                super(itemView);
-                Name = itemView.findViewById(R.id.product_name);
-                Quantity = itemView.findViewById(R.id.product_quantity);
-                Price = itemView.findViewById(R.id.product_amount);
-
-            }
-        }
-
-
-
-    }
 
 
 }

@@ -13,36 +13,33 @@ public class CustomerDetails  {
     private String CustomerName;
     private String CustomerAddress;
     private String CustomerPhoneNumber;
-    private String CustomerUID;
     private String Amount;
+    private String SubscriptionID;
+    private String Status;
 
-    public String getAmount() {
-        return Amount;
-    }
 
-    public void setAmount(String amount) {
-        Amount = amount;
-    }
-
-    public CustomerDetails(String customerName, String customerAddress, String customerPhoneNumber, String customerUID, String amount) {
+    public CustomerDetails(String customerName, String customerAddress, String customerPhoneNumber, String amount, String subscriptionID, String status) {
         CustomerName = customerName;
         CustomerAddress = customerAddress;
         CustomerPhoneNumber = customerPhoneNumber;
-        CustomerUID = customerUID;
         Amount = amount;
+        SubscriptionID = subscriptionID;
+        Status = status;
     }
 
-    CustomerDetails(String customerName, String customerAddress, String customerPhoneNumber, String customerUID) {
+    public CustomerDetails(String customerName, String customerAddress, String customerPhoneNumber, String subscriptionID) {
         CustomerName = customerName;
         CustomerAddress = customerAddress;
         CustomerPhoneNumber = customerPhoneNumber;
-        CustomerUID = customerUID;
+        SubscriptionID = subscriptionID;
     }
 
-    CustomerDetails(String customerName, String address, String phoneNumber) {
+    public CustomerDetails(String customerName, String customerAddress, String customerPhoneNumber, String amount, String subscriptionID) {
         CustomerName = customerName;
-        CustomerAddress = address;
-        CustomerPhoneNumber = phoneNumber;
+        CustomerAddress = customerAddress;
+        CustomerPhoneNumber = customerPhoneNumber;
+        Amount = amount;
+        SubscriptionID = subscriptionID;
     }
 
     @NonNull
@@ -55,16 +52,28 @@ public class CustomerDetails  {
                 '}';
     }
 
-    public CustomerDetails(String customerUID) {
-        CustomerUID = customerUID;
+    public String getStatus() {
+        return Status;
     }
 
-    public String getCustomerUID() {
-        return CustomerUID;
+    public void setStatus(String status) {
+        Status = status;
     }
 
-    public void setCustomerUID(String customerUID) {
-        CustomerUID = customerUID;
+    public String getAmount() {
+        return Amount;
+    }
+
+    public void setAmount(String amount) {
+        Amount = amount;
+    }
+
+    public String getSubscriptionID() {
+        return SubscriptionID;
+    }
+
+    public void setSubscriptionID(String subscriptionID) {
+        SubscriptionID = subscriptionID;
     }
 
     public String getCustomerName() {
