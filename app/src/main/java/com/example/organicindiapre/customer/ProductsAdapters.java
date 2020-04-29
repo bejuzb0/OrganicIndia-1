@@ -35,8 +35,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
 /**
-       First adapter for both Supplier and Product . main items like Vendor names,logo or Product names
-    */
+ First adapter for both Supplier and Product . main items like Vendor names,logo or Product names
+ */
 
 public class ProductsAdapters extends RecyclerView.Adapter<ProductsAdapters.viewHolder>
 {
@@ -139,7 +139,7 @@ public class ProductsAdapters extends RecyclerView.Adapter<ProductsAdapters.view
                     isExpended[0]=false;
                 }
                 else
-                    {
+                {
                     holder.vendorProductList.setVisibility(View.VISIBLE);
                     holder.detailsLayout.setVisibility(View.VISIBLE);
                     isExpended[0] = true;
@@ -149,8 +149,8 @@ public class ProductsAdapters extends RecyclerView.Adapter<ProductsAdapters.view
                             lis.add(list_cust);
                         }
                         */
-                       // SelectedItem = position;
-                      // notifyDataSetChanged();
+                    // SelectedItem = position;
+                    // notifyDataSetChanged();
                 }
 
             }
@@ -199,14 +199,14 @@ public class ProductsAdapters extends RecyclerView.Adapter<ProductsAdapters.view
 
 
     /**
-        Second adapter for both one time and subscription for child items
+     Second adapter for both one time and subscription for child items
      */
 
     public class VendorProductAdapter extends RecyclerView.Adapter<VendorProductAdapter.viewHolder>{
 
         private ArrayList<ProductDetails> productDetails;
 
-       // private ArrayList<ProductDetails> productDetails;
+        // private ArrayList<ProductDetails> productDetails;
 
         VendorProductAdapter(ArrayList<ProductDetails> productDetails) {
             this.productDetails = productDetails;
@@ -224,47 +224,47 @@ public class ProductsAdapters extends RecyclerView.Adapter<ProductsAdapters.view
         public void onBindViewHolder(@NonNull final viewHolder holder, final int position)
         {
             //if(productDetails.get(position) != null) {
-                final String Name = productDetails.get(position).getName();
-                final String Price = productDetails.get(position).getProductPrice();
-                final String Quantity = productDetails.get(position).getProductQuantity();
-                final int MinPackingQuantity = productDetails.get(position).getMinPackingQuantity();
+            final String Name = productDetails.get(position).getName();
+            final String Price = productDetails.get(position).getProductPrice();
+            final String Quantity = productDetails.get(position).getProductQuantity();
+            final int MinPackingQuantity = productDetails.get(position).getMinPackingQuantity();
 
-                //final String QuantityType = productDetails[position].getQuantityType();
-                holder.Name.setText(Name);
-                holder.Price.setText(Price + "/" + MinPackingQuantity);
-                holder.Quantity.setText(Quantity + "");
+            //final String QuantityType = productDetails[position].getQuantityType();
+            holder.Name.setText(Name);
+            holder.Price.setText(Price + "/" + MinPackingQuantity);
+            holder.Quantity.setText(Quantity + "");
 
 
-                holder.Add.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        holder.Quantity.setText(Count(holder.Quantity.getText().toString(), MinPackingQuantity));
+            holder.Add.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    holder.Quantity.setText(Count(holder.Quantity.getText().toString(), MinPackingQuantity));
+                }
+            });
+            holder.Remove.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    holder.Quantity.setText(Count(holder.Quantity.getText().toString(), -MinPackingQuantity));
+                }
+            });
+            holder.Checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (isChecked) {
+                        SelectedList.add(0, Name);
+                        SelectedList.add(1, holder.Quantity.getText().toString());
+                        SelectedList.add(2, Price + " ");
+                    } else {
+                        SelectedList.remove(1);
+                        SelectedList.remove(Name);
+                        SelectedList.remove(Price + " ");
                     }
-                });
-                holder.Remove.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        holder.Quantity.setText(Count(holder.Quantity.getText().toString(), -MinPackingQuantity));
-                    }
-                });
-                holder.Checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        if (isChecked) {
-                            SelectedList.add(0, Name);
-                            SelectedList.add(1, holder.Quantity.getText().toString());
-                            SelectedList.add(2, Price + " ");
-                        } else {
-                            SelectedList.remove(1);
-                            SelectedList.remove(Name);
-                            SelectedList.remove(Price + " ");
-                        }
-                        // productDetails.setOrderList(SelectedList);
-                    }
-                });
-            }
+                    // productDetails.setOrderList(SelectedList);
+                }
+            });
+        }
 
-       // }
+        // }
 
         private String Count(String  Count, int Value)
         {

@@ -20,7 +20,7 @@ public class ProductDetails  {
     private String ProductPrice;
     private int MinPackingQuantity;
     private String vendorID;
-   // private String QuantityType;
+    // private String QuantityType;
 
     public String getVendorID() {
         return vendorID;
@@ -36,7 +36,7 @@ public class ProductDetails  {
         ProductPrice = productPrice;
         MinPackingQuantity = minPackingQuantity;
         this.vendorID = vendorID;
-      //  QuantityType = quantityType;
+        //  QuantityType = quantityType;
     }
 
     public String getProductQuantity() {
