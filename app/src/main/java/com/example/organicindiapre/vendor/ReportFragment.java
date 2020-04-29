@@ -31,7 +31,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class ReportFragment extends Fragment {
 
-    FirebaseFirestore DB;
+    private FirebaseFirestore DB;
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Nullable
