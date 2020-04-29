@@ -83,9 +83,8 @@ public class Customer_Act extends AppCompatActivity implements NavigationView.On
                         new CustomerFragment()).commit();
                 break;
             case R.id.nav_subscription_customer:
-                //main window of subscription to be made
-
-                Toast.makeText(this, "Subscription Clicked", Toast.LENGTH_SHORT).show();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_customer,
+                        new CustomerSubscriptionFragment()).commit();
                 break;
 
             case R.id.nav_logout_customer:

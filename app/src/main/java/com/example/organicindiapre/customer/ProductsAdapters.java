@@ -80,7 +80,6 @@ public class ProductsAdapters extends RecyclerView.Adapter<ProductsAdapters.view
 
         //getting data for each product under vendor or product
         final ArrayList<ProductDetails> productDetails = new ArrayList<ProductDetails>();
-
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (fragmentName.equals("supplier"))
         {
@@ -88,6 +87,7 @@ public class ProductsAdapters extends RecyclerView.Adapter<ProductsAdapters.view
             holder.Title.setText("Product");
             // ProductDetails products =  new ProductDetails("milk","hbhk","jhbgre");
             // lis.add(products);
+
 
             db.collection("Users").document(list.get(position).getVendorID()).collection("Products")
                     .get()
@@ -109,22 +109,10 @@ public class ProductsAdapters extends RecyclerView.Adapter<ProductsAdapters.view
                             }
                         }
                     });
-
-          /*  productDetails = new ProductDetails[]
-                    {
-                            new ProductDetails("milk"+position,1,45,1),
-                            new ProductDetails("curd"+position,2,50,2),
-                            new ProductDetails("Paneer"+position,300,55,50),
-                    };*/
         }
         else {
             //data for products
             holder.Title.setText("Vendor");
-           /* productDetails = new ProductDetails[]{
-                    new ProductDetails("ravi"+position,100,98,50),
-                    new ProductDetails("krishna"+position,400,92,100),
-                    new ProductDetails("sai"+position,500,54,250),
-            };*/
         }
 
         holder.itemLayout.setOnClickListener(new View.OnClickListener()
@@ -245,6 +233,23 @@ public class ProductsAdapters extends RecyclerView.Adapter<ProductsAdapters.view
                     @Override
                     public void onClick(View v) {
                         holder.Quantity.setText(Count(holder.Quantity.getText().toString(), -MinPackingQuantity));
+
+            holder.Checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (isChecked)
+                    {
+                        //Replace all this with ProductUID to add list
+                        SelectedList.add(0,Name);
+                        SelectedList.add(1,holder.Quantity.getText().toString());
+                        SelectedList.add(2,Price+" ");
+                    }
+                    else {
+                        //Remove ProductUID from list
+                        SelectedList.remove(1);
+                       SelectedList.remove(Name);
+                       SelectedList.remove(Price+" ");
+
                     }
                 });
                 holder.Checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
