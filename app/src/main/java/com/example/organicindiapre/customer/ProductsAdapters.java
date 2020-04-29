@@ -98,7 +98,7 @@ public class ProductsAdapters extends RecyclerView.Adapter<ProductsAdapters.view
                                 for (QueryDocumentSnapshot document : task.getResult()) {
                                     Map<String, Object> m = document.getData();
                                     Log.d(TAG, list.get(position).getVendorID());
-                                    productDetails.add(new ProductDetails(m.get("ProductName").toString(),Integer.parseInt(m.get("Quantity").toString()), Integer.parseInt(m.get("Rate").toString()), 1,list.get(position).getVendorID()));
+                                    productDetails.add(new ProductDetails(m.get("ProductName").toString(),m.get("Quantity").toString(), m.get("Rate").toString(), 1,list.get(position).getVendorID()));
                                     Log.d(TAG, "DocumentSnapshot product: " + document.getData());
                                 }
                                 vendorProductAdapter = new VendorProductAdapter(productDetails);
@@ -225,8 +225,8 @@ public class ProductsAdapters extends RecyclerView.Adapter<ProductsAdapters.view
         {
             //if(productDetails.get(position) != null) {
                 final String Name = productDetails.get(position).getName();
-                final int Price = productDetails.get(position).getProductPrice();
-                final int Quantity = productDetails.get(position).getProductQuantity();
+                final String Price = productDetails.get(position).getProductPrice();
+                final String Quantity = productDetails.get(position).getProductQuantity();
                 final int MinPackingQuantity = productDetails.get(position).getMinPackingQuantity();
 
                 //final String QuantityType = productDetails[position].getQuantityType();

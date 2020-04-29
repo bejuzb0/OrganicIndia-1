@@ -16,8 +16,8 @@ import java.util.List;
 public class ProductDetails  {
 
     private String Name;
-    private int ProductQuantity;
-    private int ProductPrice;
+    private String ProductQuantity;
+    private String ProductPrice;
     private int MinPackingQuantity;
     private String vendorID;
    // private String QuantityType;
@@ -30,7 +30,7 @@ public class ProductDetails  {
         this.vendorID = vendorID;
     }
 
-    public ProductDetails(String name, int productQuantity, int productPrice, int minPackingQuantity, String vendorID) {
+    public ProductDetails(String name, String productQuantity, String productPrice, int minPackingQuantity, String vendorID) {
         Name = name;
         ProductQuantity = productQuantity;
         ProductPrice = productPrice;
@@ -38,7 +38,24 @@ public class ProductDetails  {
         this.vendorID = vendorID;
       //  QuantityType = quantityType;
     }
-    public ProductDetails(String name, int productQuantity, int productPrice) {
+
+    public String getProductQuantity() {
+        return ProductQuantity;
+    }
+
+    public void setProductQuantity(String productQuantity) {
+        ProductQuantity = productQuantity;
+    }
+
+    public String getProductPrice() {
+        return ProductPrice;
+    }
+
+    public void setProductPrice(String productPrice) {
+        ProductPrice = productPrice;
+    }
+
+    public ProductDetails(String name, String productQuantity, String productPrice) {
         Name = name;
         ProductQuantity = productQuantity;
         ProductPrice = productPrice;
@@ -62,21 +79,7 @@ public class ProductDetails  {
         Name = name;
     }
 
-    public int getProductQuantity() {
-        return ProductQuantity;
-    }
 
-    public void setProductQuantity(int productQuantity) {
-        ProductQuantity = productQuantity;
-    }
-
-    public int getProductPrice() {
-        return ProductPrice;
-    }
-
-    public void setProductPrice(int productPrice) {
-        ProductPrice = productPrice;
-    }
 
     public ProductDetails(){
 

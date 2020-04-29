@@ -29,7 +29,7 @@ import java.util.Objects;
 
 public class UserDetails extends AppCompatActivity {
 
-    EditText firstName,lastName,email,password,conformPassword;
+    EditText firstName,lastName,email,password,conformPassword,address;
     Button saveBtn;
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
@@ -49,6 +49,7 @@ public class UserDetails extends AppCompatActivity {
         password = findViewById(R.id.password);
         conformPassword = findViewById(R.id.conform_password);
         userType = findViewById(R.id.category);
+        address = findViewById(R.id.address);
 
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
@@ -60,7 +61,7 @@ public class UserDetails extends AppCompatActivity {
             public void onClick(View v) {
                 if(!firstName.getText().toString().isEmpty()&& !lastName.getText().toString().isEmpty() &&
                         !email.getText().toString().isEmpty() && !password.getText().toString().isEmpty()
-                        && !conformPassword.getText().toString().isEmpty()) {
+                        && !conformPassword.getText().toString().isEmpty() && !address.getText().toString().isEmpty()) {
                     if (password.getText().toString().equals(conformPassword.getText().toString()) && password.length() > 6)
                     {
                         final ProgressDialog progressDialog = new ProgressDialog(UserDetails.this);
@@ -76,7 +77,7 @@ public class UserDetails extends AppCompatActivity {
                         user.put("Password",password.getText().toString());
                         user.put("MobileNumber",fAuth.getCurrentUser().getPhoneNumber());
                         user.put("UserType",getSelected());
-
+                        user.put("Address",address.getText().toString());
 
                         docRef.set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
