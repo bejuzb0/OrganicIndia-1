@@ -1,5 +1,6 @@
 package com.example.organicindiapre.vendor;
 
+import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -66,7 +67,7 @@ public class ReportFragment extends Fragment {
                             {
                                 if (snapshot.exists())
                                 {
-                                    ReportsHolder reportsHolder = new ReportsHolder(
+                                    final ReportsHolder reportsHolder = new ReportsHolder(
                                             Objects.requireNonNull(snapshot.get("Amount")).toString()
                                             , Objects.requireNonNull(snapshot.get("Revenue")).toString());
                                     revenueArrayList.add(reportsHolder);
@@ -77,18 +78,32 @@ public class ReportFragment extends Fragment {
                                                 public void onComplete(@NonNull Task<QuerySnapshot> task)
                                                 {
                                                     if (task.isSuccessful()){
-                                                        Toast.makeText(getContext(), "done", Toast.LENGTH_SHORT).show();
-                                                        for (QueryDocumentSnapshot snapshot1 : Objects.requireNonNull(task.getResult())){
-                                                            ReportsHolder reportsHolder = new ReportsHolder(
-                                                                    Objects.requireNonNull(snapshot1.get("From")).toString(),
-                                                                    Objects.requireNonNull(snapshot1.get("To")).toString(),
-                                                                    "Customer UID : "+snapshot.getId()
-                                                            );
-                                                            noDeliveryArrayList.add(reportsHolder);
+                                                        for (final QueryDocumentSnapshot snapshot1 : Objects.requireNonNull(task.getResult()))
+                                                        {
+                                                            Toast.makeText(getContext(), ""+snapshot.getId(), Toast.LENGTH_SHORT).show();
+                                                            DB.collection("Users").get()
+                                                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                                        @Override
+                                                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                                            for (QueryDocumentSnapshot snapshot2 : Objects.requireNonNull(task.getResult()))
+                                                                            {
+                                                                                if (snapshot2.getId().equals(snapshot.getId()))
+                                                                                {
+                                                                                    Toast.makeText(getContext(), "Done", Toast.LENGTH_SHORT).show();
+                                                                                    ReportsHolder reportsHolder = new ReportsHolder(
+                                                                                            Objects.requireNonNull(snapshot1.get("From")).toString(),
+                                                                                            Objects.requireNonNull(snapshot1.get("To")).toString(),
+                                                                                            Objects.requireNonNull(snapshot2.get("FirstName")).toString()
+                                                                                    );
+                                                                                    noDeliveryArrayList.add(reportsHolder);
+                                                                                }
+                                                                            }
+                                                                            NoDeliveryAdapter noDeliveryAdapter = new NoDeliveryAdapter(noDeliveryArrayList);
+                                                                            noDelivery.setAdapter(noDeliveryAdapter);
+                                                                            noDelivery.setHasFixedSize(true);
+                                                                        }
+                                                                    });
                                                         }
-                                                        NoDeliveryAdapter noDeliveryAdapter = new NoDeliveryAdapter(noDeliveryArrayList);
-                                                        noDelivery.setAdapter(noDeliveryAdapter);
-                                                        noDelivery.setHasFixedSize(true);
                                                     }
                                                 }
                                             });
@@ -104,18 +119,6 @@ public class ReportFragment extends Fragment {
                         }
                     }
                 });
-
-
-
-       /* for (int i = 0;i<=8;i++)
-        {
-            ReportsHolder reportsHolder = new ReportsHolder("amount"+i,"revenue");
-            revenueArrayList.add(reportsHolder);
-        }
-
-        */
-
-
 
         return view;
     }
@@ -137,6 +140,7 @@ public class ReportFragment extends Fragment {
             return new NoDeliveryViewHolder(view);
         }
 
+        @SuppressLint("SetTextI18n")
         @Override
         public void onBindViewHolder(@NonNull NoDeliveryViewHolder holder, int position) {
 
@@ -164,10 +168,10 @@ public class ReportFragment extends Fragment {
 
     public static class RevenueAdapter extends RecyclerView.Adapter<RevenueAdapter.RevenueViewHolder>{
 
-        ArrayList<ReportsHolder> holders ;
+        ArrayList<ReportsHolder>  arrayList ;
 
-        RevenueAdapter(ArrayList<ReportsHolder> holders) {
-            this.holders = holders;
+        RevenueAdapter(ArrayList<ReportsHolder> arrayList) {
+            this.arrayList = arrayList;
         }
 
         @NonNull
@@ -177,16 +181,17 @@ public class ReportFragment extends Fragment {
             return new RevenueViewHolder(view);
         }
 
+        @SuppressLint("SetTextI18n")
         @Override
         public void onBindViewHolder(@NonNull RevenueViewHolder holder, int position)
         {
-            holder.amount.setText("Amount : "+holders.get(position).getAmount());
-            holder.revenue.setText("Revenue : "+holders.get(position).getRevenue());
+            holder.amount.setText("Amount : "+arrayList.get(position).getAmount());
+            holder.revenue.setText("Revenue : "+arrayList.get(position).getRevenue());
         }
 
         @Override
         public int getItemCount() {
-            return holders.size();
+            return arrayList.size();
         }
 
         static class RevenueViewHolder extends RecyclerView.ViewHolder {
