@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_0);
 
-        
+
         final EditText phoneNumber = findViewById(R.id.etName);
         final Button login = findViewById(R.id.button);
         final Button resendCode = findViewById(R.id.resend_button);
@@ -196,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         if (user != null)
         {
-            GotoActivity();
+            checkUserProfile();
         }
     }
 
@@ -269,32 +269,56 @@ public class MainActivity extends AppCompatActivity {
                 .getBoolean("isVendor", false);
     }
 
+    //customer
+    private void setCustomer(boolean customer)
+    {
+        getSharedPreferences("PREFERENCE", MODE_PRIVATE).edit()
+                .putBoolean("isCustomer", customer).apply();
+    }
+
+    private boolean getCustomer()
+    {
+        return  getSharedPreferences("PREFERENCE", MODE_PRIVATE)
+                .getBoolean("isCustomer", false);
+    }
+
+
     private void GotoActivity()
     {
         if (getVendor()) {
             openActivityVendor();
-        } else {
+        } else if (getCustomer()){
             openActivityCustomer();
+        }else{
+            startActivity(new Intent(getApplicationContext(),UserDetails.class));
+            finish();
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+
     private void checkUserProfile() {
-        DocumentReference docRef = db.collection("Users").document(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid());
+        DocumentReference docRef = db.collection("Users").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
         docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if(documentSnapshot.exists())
                 {
-                    String UserType = Objects.requireNonNull(documentSnapshot.get("UserType")).toString();
+                    String UserType =documentSnapshot.get("UserType").toString();
                     if (UserType.equals("Vendor")){
-                        setVendor(true);
-                    }else {
-                        setVendor(false);
+                        openActivityVendor();
                     }
-                    GotoActivity();
-                }else{
+                    else if(UserType.equals("Customer")) {
+                       openActivityCustomer();
+                    }
+                    else{
+                        startActivity(new Intent(getApplicationContext(),UserDetails.class));
+                        finish();
+
+                    }
+
+                }
+                else{
                     startActivity(new Intent(getApplicationContext(),UserDetails.class));
                     finish();
                 }
