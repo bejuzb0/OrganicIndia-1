@@ -14,14 +14,13 @@ import java.util.List;
 
 @Keep
 public class ProductDetails  {
-  
+
     private String Name;
     private String ProductQuantity;
     private String ProductPrice;
     private int MinPackingQuantity;
     private String vendorID;
-   // private String QuantityType;
-
+    // private String QuantityType;
 
     public String getVendorID() {
         return vendorID;
@@ -31,13 +30,13 @@ public class ProductDetails  {
         this.vendorID = vendorID;
     }
 
-    public ProductDetails(String name, int productQuantity, int productPrice, int minPackingQuantity, String vendorID) {
+    public ProductDetails(String name, String productQuantity, String productPrice, int minPackingQuantity, String vendorID) {
         Name = name;
         ProductQuantity = productQuantity;
         ProductPrice = productPrice;
         MinPackingQuantity = minPackingQuantity;
         this.vendorID = vendorID;
-      //  QuantityType = quantityType;
+        //  QuantityType = quantityType;
     }
 
     public String getProductQuantity() {

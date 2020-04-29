@@ -35,8 +35,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
 /**
-       First adapter for both Supplier and Product . main items like Vendor names,logo or Product names
-    */
+ First adapter for both Supplier and Product . main items like Vendor names,logo or Product names
+ */
 
 public class ProductsAdapters extends RecyclerView.Adapter<ProductsAdapters.viewHolder>
 {
@@ -80,6 +80,7 @@ public class ProductsAdapters extends RecyclerView.Adapter<ProductsAdapters.view
 
         //getting data for each product under vendor or product
         final ArrayList<ProductDetails> productDetails = new ArrayList<ProductDetails>();
+
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (fragmentName.equals("supplier"))
         {
@@ -87,7 +88,6 @@ public class ProductsAdapters extends RecyclerView.Adapter<ProductsAdapters.view
             holder.Title.setText("Product");
             // ProductDetails products =  new ProductDetails("milk","hbhk","jhbgre");
             // lis.add(products);
-
 
             db.collection("Users").document(list.get(position).getVendorID()).collection("Products")
                     .get()
@@ -98,7 +98,7 @@ public class ProductsAdapters extends RecyclerView.Adapter<ProductsAdapters.view
                                 for (QueryDocumentSnapshot document : task.getResult()) {
                                     Map<String, Object> m = document.getData();
                                     Log.d(TAG, list.get(position).getVendorID());
-                                    productDetails.add(new ProductDetails(m.get("ProductName").toString(),Integer.parseInt(m.get("Quantity").toString()), Integer.parseInt(m.get("Rate").toString()), 1,list.get(position).getVendorID()));
+                                    productDetails.add(new ProductDetails(m.get("ProductName").toString(),m.get("Quantity").toString(), m.get("Rate").toString(), 1,list.get(position).getVendorID()));
                                     Log.d(TAG, "DocumentSnapshot product: " + document.getData());
                                 }
                                 vendorProductAdapter = new VendorProductAdapter(productDetails);
@@ -109,10 +109,22 @@ public class ProductsAdapters extends RecyclerView.Adapter<ProductsAdapters.view
                             }
                         }
                     });
+
+          /*  productDetails = new ProductDetails[]
+                    {
+                            new ProductDetails("milk"+position,1,45,1),
+                            new ProductDetails("curd"+position,2,50,2),
+                            new ProductDetails("Paneer"+position,300,55,50),
+                    };*/
         }
         else {
             //data for products
             holder.Title.setText("Vendor");
+           /* productDetails = new ProductDetails[]{
+                    new ProductDetails("ravi"+position,100,98,50),
+                    new ProductDetails("krishna"+position,400,92,100),
+                    new ProductDetails("sai"+position,500,54,250),
+            };*/
         }
 
         holder.itemLayout.setOnClickListener(new View.OnClickListener()
@@ -127,7 +139,7 @@ public class ProductsAdapters extends RecyclerView.Adapter<ProductsAdapters.view
                     isExpended[0]=false;
                 }
                 else
-                    {
+                {
                     holder.vendorProductList.setVisibility(View.VISIBLE);
                     holder.detailsLayout.setVisibility(View.VISIBLE);
                     isExpended[0] = true;
@@ -137,8 +149,8 @@ public class ProductsAdapters extends RecyclerView.Adapter<ProductsAdapters.view
                             lis.add(list_cust);
                         }
                         */
-                       // SelectedItem = position;
-                      // notifyDataSetChanged();
+                    // SelectedItem = position;
+                    // notifyDataSetChanged();
                 }
 
             }
@@ -187,14 +199,14 @@ public class ProductsAdapters extends RecyclerView.Adapter<ProductsAdapters.view
 
 
     /**
-        Second adapter for both one time and subscription for child items
+     Second adapter for both one time and subscription for child items
      */
 
     public class VendorProductAdapter extends RecyclerView.Adapter<VendorProductAdapter.viewHolder>{
 
         private ArrayList<ProductDetails> productDetails;
 
-       // private ArrayList<ProductDetails> productDetails;
+        // private ArrayList<ProductDetails> productDetails;
 
         VendorProductAdapter(ArrayList<ProductDetails> productDetails) {
             this.productDetails = productDetails;
@@ -212,64 +224,47 @@ public class ProductsAdapters extends RecyclerView.Adapter<ProductsAdapters.view
         public void onBindViewHolder(@NonNull final viewHolder holder, final int position)
         {
             //if(productDetails.get(position) != null) {
-                final String Name = productDetails.get(position).getName();
-                final int Price = productDetails.get(position).getProductPrice();
-                final int Quantity = productDetails.get(position).getProductQuantity();
-                final int MinPackingQuantity = productDetails.get(position).getMinPackingQuantity();
+            final String Name = productDetails.get(position).getName();
+            final String Price = productDetails.get(position).getProductPrice();
+            final String Quantity = productDetails.get(position).getProductQuantity();
+            final int MinPackingQuantity = productDetails.get(position).getMinPackingQuantity();
 
-                //final String QuantityType = productDetails[position].getQuantityType();
-                holder.Name.setText(Name);
-                holder.Price.setText(Price + "/" + MinPackingQuantity);
-                holder.Quantity.setText(Quantity + "");
+            //final String QuantityType = productDetails[position].getQuantityType();
+            holder.Name.setText(Name);
+            holder.Price.setText(Price + "/" + MinPackingQuantity);
+            holder.Quantity.setText(Quantity + "");
 
 
-                holder.Add.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        holder.Quantity.setText(Count(holder.Quantity.getText().toString(), MinPackingQuantity));
-                    }
-                });
-                holder.Remove.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        holder.Quantity.setText(Count(holder.Quantity.getText().toString(), -MinPackingQuantity));
-
+            holder.Add.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    holder.Quantity.setText(Count(holder.Quantity.getText().toString(), MinPackingQuantity));
+                }
+            });
+            holder.Remove.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    holder.Quantity.setText(Count(holder.Quantity.getText().toString(), -MinPackingQuantity));
+                }
+            });
             holder.Checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (isChecked)
-                    {
-                        //Replace all this with ProductUID to add list
-                        SelectedList.add(0,Name);
-                        SelectedList.add(1,holder.Quantity.getText().toString());
-                        SelectedList.add(2,Price+" ");
-                    }
-                    else {
-                        //Remove ProductUID from list
+                    if (isChecked) {
+                        SelectedList.add(0, Name);
+                        SelectedList.add(1, holder.Quantity.getText().toString());
+                        SelectedList.add(2, Price + " ");
+                    } else {
                         SelectedList.remove(1);
-                       SelectedList.remove(Name);
-                       SelectedList.remove(Price+" ");
-
+                        SelectedList.remove(Name);
+                        SelectedList.remove(Price + " ");
                     }
-                });
-                holder.Checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        if (isChecked) {
-                            SelectedList.add(0, Name);
-                            SelectedList.add(1, holder.Quantity.getText().toString());
-                            SelectedList.add(2, Price + " ");
-                        } else {
-                            SelectedList.remove(1);
-                            SelectedList.remove(Name);
-                            SelectedList.remove(Price + " ");
-                        }
-                        // productDetails.setOrderList(SelectedList);
-                    }
-                });
-            }
+                    // productDetails.setOrderList(SelectedList);
+                }
+            });
+        }
 
-       // }
+        // }
 
         private String Count(String  Count, int Value)
         {
