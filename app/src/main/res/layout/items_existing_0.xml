@@ -55,9 +55,6 @@
             </Button>
         </RelativeLayout>
 
-        <include
-            layout="@layout/items_product_ist_0">
-        </include>
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

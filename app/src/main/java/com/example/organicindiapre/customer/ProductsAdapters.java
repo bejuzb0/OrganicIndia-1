@@ -63,28 +63,34 @@ public class ProductsAdapters extends RecyclerView.Adapter<ProductsAdapters.view
         holder.vendorLogo.setImageResource(list.get(position).getVendorLogo());
 
         //getting data for each product under vendor or product
-        ProductDetails[] productDetails;
+        ProductDetails[] productDetails = new ProductDetails[0];
         if (fragmentName.equals("supplier"))
         {
             //data for supplies
             holder.Title.setText("Product");
             // ProductDetails products =  new ProductDetails("milk","hbhk","jhbgre");
             // lis.add(products);
-            productDetails = new ProductDetails[]
+           /* productDetails = new ProductDetails[]
                     {
                             new ProductDetails("milk"+position,1,45,1),
                             new ProductDetails("curd"+position,2,50,2),
                             new ProductDetails("Paneer"+position,300,55,50),
                     };
+                  
+            */
         }
         else {
             //data for products
             holder.Title.setText("Vendor");
+            /*
             productDetails = new ProductDetails[]{
                     new ProductDetails("ravi"+position,100,98,50),
                     new ProductDetails("krishna"+position,400,92,100),
                     new ProductDetails("sai"+position,500,54,250),
             };
+            
+             */
+            
         }
         final VendorProductAdapter vendorProductAdapter = new VendorProductAdapter(productDetails);
         holder.vendorProductList.setHasFixedSize(true);
@@ -190,8 +196,8 @@ public class ProductsAdapters extends RecyclerView.Adapter<ProductsAdapters.view
         public void onBindViewHolder(@NonNull final viewHolder holder, final int position)
         {
             final String Name = productDetails[position].getName();
-            final int Price = productDetails[position].getProductPrice();
-            final int Quantity = productDetails[position].getProductQuantity();
+            final String Price =  productDetails[position].getProductPrice();
+            final String Quantity =  productDetails[position].getProductQuantity();
             final int MinPackingQuantity = productDetails[position].getMinPackingQuantity();
             //final String QuantityType = productDetails[position].getQuantityType();
             holder.Name.setText(Name);
@@ -217,11 +223,13 @@ public class ProductsAdapters extends RecyclerView.Adapter<ProductsAdapters.view
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if (isChecked)
                     {
+                        //Replace all this with ProductUID to add list
                         SelectedList.add(0,Name);
                         SelectedList.add(1,holder.Quantity.getText().toString());
                         SelectedList.add(2,Price+" ");
                     }
                     else {
+                        //Remove ProductUID from list
                         SelectedList.remove(1);
                        SelectedList.remove(Name);
                        SelectedList.remove(Price+" ");
