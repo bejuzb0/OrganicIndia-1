@@ -89,6 +89,7 @@ public class SupplierFragment extends Fragment
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+
         //Add location here
         db.collection("Users").whereEqualTo("UserType","Vendor")
                 .get()

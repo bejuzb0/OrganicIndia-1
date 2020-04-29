@@ -34,7 +34,7 @@ public class UserDetails extends AppCompatActivity {
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
     String userID;
-    RadioGroup userType;
+    RadioGroup userType,userAdd;
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
@@ -54,6 +54,13 @@ public class UserDetails extends AppCompatActivity {
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
         userID = Objects.requireNonNull(fAuth.getCurrentUser()).getUid();
+
+
+        if(getSelected().equals("Vendor"))
+        {
+
+        }
+
 
 
         saveBtn.setOnClickListener(new View.OnClickListener() {

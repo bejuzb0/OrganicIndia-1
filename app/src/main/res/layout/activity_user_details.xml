@@ -63,13 +63,16 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:background="#FFF"
             android:inputType="textPersonName"
-            android:maxLines="5"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent" />
+            android:maxLines="5" />
+
+
 
     </com.google.android.material.textfield.TextInputLayout>
+
     <com.google.android.material.textfield.TextInputLayout
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
