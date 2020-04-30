@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.organicindiapre.customer.Customer_Act;
@@ -35,7 +36,7 @@ public class UserDetails extends AppCompatActivity {
     FirebaseFirestore fStore;
     String userID;
     RadioGroup userType,userAdd;
-
+    private Spinner locality;
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +51,8 @@ public class UserDetails extends AppCompatActivity {
         conformPassword = findViewById(R.id.conform_password);
         userType = findViewById(R.id.category);
         address = findViewById(R.id.address);
+
+        locality = (Spinner)findViewById(R.id.locality_user);
 
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
@@ -80,6 +83,8 @@ public class UserDetails extends AppCompatActivity {
                         user.put("MobileNumber",fAuth.getCurrentUser().getPhoneNumber());
                         user.put("UserType",getSelected());
                         user.put("Address",address.getText().toString());
+                        user.put("Location",locality.getSelectedItem().toString());
+
 
                         docRef.set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
