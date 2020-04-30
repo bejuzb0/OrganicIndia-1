@@ -85,14 +85,15 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                         String prod_name = name.getText().toString();
-                        String quant = quantity.getText().toString();
-                        String ratee = rate.getText().toString();
+                        int quant = Integer.parseInt(quantity.getText().toString());
+                        double ratee = Double.parseDouble(rate.getText().toString());
+                        String productID = data.get(position).productID;
                         data.remove(position);
-                        data.add(new ProductVendorClass(prod_name, user.getUid()+prod_name, quant,ratee));
+                        data.add(new ProductVendorClass(prod_name, productID, Integer.toString(quant),Double.toString(ratee)));
                         notifyDataSetChanged();
 
 
-                        db.collection("Users").document(user.getUid()).collection("Products").document(user.getUid()+old_name)
+                        db.collection("Products").document(productID)
                                 .delete()
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
@@ -112,9 +113,10 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
                         product.put("ProductName", prod_name);
                         product.put("Quantity", quant);
                         product.put("Rate", ratee);
-                        product.put("ProductID", user.getUid()+prod_name);
+                        product.put("ProductID", productID);
+                        product.put("VendorID", user.getUid());
 
-                        db.collection("Users").document(user.getUid()).collection("Products").document(user.getUid()+prod_name)
+                        db.collection("Products").document(productID)
                                 .set(product)
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
@@ -157,10 +159,11 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
+                        String productID = data.get(position).productID;
                         data.remove(position);
                         notifyDataSetChanged();
 
-                        db.collection("Users").document(user.getUid()).collection("Products").document(user.getUid()+old_name)
+                        db.collection("Products").document(productID)
                                 .delete()
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override

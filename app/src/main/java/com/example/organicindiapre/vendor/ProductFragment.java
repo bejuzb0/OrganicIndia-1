@@ -20,6 +20,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -52,15 +53,13 @@ public class ProductFragment extends Fragment {
         LinearLayoutManager lv = new LinearLayoutManager(getContext());
         rv.setLayoutManager(lv);
 
-        //registerForContextMenu(rv);
-
         l = new ArrayList<>();
         db = FirebaseFirestore.getInstance();
 
-
+        /* Following gets the product data and shows it on the screen */
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        CollectionReference users = db.collection("Users").document(user.getUid()).collection("Products");
-        users.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        db.collection("Products").whereEqualTo("VendorID", user.getUid())
+        .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
@@ -81,11 +80,6 @@ public class ProductFragment extends Fragment {
                 }
             }
         });
-       /* for(int i=0; i<20; i++) {
-            l.add(new ProductVendorClass("Product"+i, "ID"+i, "10"+i, "123+"+i));
-
-        }*/
-
        Button add = (Button)rootview.findViewById(R.id.product_add);
 
         add.setOnClickListener(new View.OnClickListener() {
@@ -102,33 +96,34 @@ public class ProductFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        String prod_name = name.getText().toString();
-                        String quant = quantity.getText().toString();
-                        String ratee = rate.getText().toString();
-                        l.add(new ProductVendorClass(prod_name, user.getUid()+prod_name, ratee,quant));
-                        pa.notifyDataSetChanged();
+                        final String prod_name = name.getText().toString();
+                        final int quant = Integer.parseInt(quantity.getText().toString());
+                        final double ratee = Double.parseDouble(rate.getText().toString());
 
                         Map<String, Object> product = new HashMap<>();
                         product.put("ProductName", prod_name);
                         product.put("Quantity", quant);
                         product.put("Rate", ratee);
-                        product.put("ProductID", user.getUid()+prod_name);
+                        product.put("VendorID", user.getUid());
 
-                        db.collection("Users").document(user.getUid()).collection("Products").document(user.getUid()+prod_name)
-                                .set(product)
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        db.collection("Products")
+                                .add(product)
+                                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                     @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Log.d(TAG, "DocumentSnapshot successfully written!");
+                                    public void onSuccess(DocumentReference documentReference) {
+                                        Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
+                                        String docID = documentReference.getId();
+                                        documentReference.update("ProductID", docID);
+                                        l.add(new ProductVendorClass(prod_name, docID ,  Double.toString(ratee),Integer.toString(quant)));
+                                        pa.notifyDataSetChanged();
                                     }
                                 })
                                 .addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
-                                        Log.w(TAG, "Error writing document", e);
+                                        Log.w(TAG, "Error adding document", e);
                                     }
                                 });
-
                     }
                 });
                 builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -137,7 +132,6 @@ public class ProductFragment extends Fragment {
                         dialog.cancel();
                     }
                 });
-
                 builder.show();
             }
         });
