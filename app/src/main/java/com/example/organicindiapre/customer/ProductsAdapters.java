@@ -89,7 +89,7 @@ public class ProductsAdapters extends RecyclerView.Adapter<ProductsAdapters.view
             // ProductDetails products =  new ProductDetails("milk","hbhk","jhbgre");
             // lis.add(products);
 
-            db.collection("Users").document(list.get(position).getVendorID()).collection("Products")
+            db.collection("Products").whereEqualTo("VendorID", list.get(position).getVendorID())
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
@@ -98,7 +98,7 @@ public class ProductsAdapters extends RecyclerView.Adapter<ProductsAdapters.view
                                 for (QueryDocumentSnapshot document : task.getResult()) {
                                     Map<String, Object> m = document.getData();
                                     Log.d(TAG, list.get(position).getVendorID());
-                                    productDetails.add(new ProductDetails(m.get("ProductName").toString(),m.get("Quantity").toString(), m.get("Rate").toString(), 1,list.get(position).getVendorID()));
+                                    productDetails.add(new ProductDetails(m.get("ProductName").toString(),m.get("Quantity").toString(), m.get("Rate").toString(), 1,list.get(position).getVendorID(), m.get("ProductID").toString()));
                                     Log.d(TAG, "DocumentSnapshot product: " + document.getData());
                                 }
                                 vendorProductAdapter = new VendorProductAdapter(productDetails);

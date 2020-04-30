@@ -19,8 +19,17 @@ public class ProductDetails  {
     private String ProductQuantity;
     private String ProductPrice;
     private int MinPackingQuantity;
+    private String productID;
     private String vendorID;
     // private String QuantityType;
+
+    public String getProductID() {
+        return productID;
+    }
+
+    public void setProductID(String productID) {
+        this.productID = productID;
+    }
 
     public String getVendorID() {
         return vendorID;
@@ -30,12 +39,13 @@ public class ProductDetails  {
         this.vendorID = vendorID;
     }
 
-    public ProductDetails(String name, String productQuantity, String productPrice, int minPackingQuantity, String vendorID) {
+    public ProductDetails(String name, String productQuantity, String productPrice, int minPackingQuantity, String vendorID, String productID) {
         Name = name;
         ProductQuantity = productQuantity;
         ProductPrice = productPrice;
         MinPackingQuantity = minPackingQuantity;
         this.vendorID = vendorID;
+        this.productID = productID;
         //  QuantityType = quantityType;
     }
 
