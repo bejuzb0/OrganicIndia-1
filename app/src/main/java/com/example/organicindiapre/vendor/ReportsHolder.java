@@ -2,44 +2,41 @@ package com.example.organicindiapre.vendor;
 
 public class ReportsHolder
 {
-    private String Amount;
+    private Double Amount;
     private String Revenue;
     private String From;
     private String To;
-    private String CustomerID;
+    private String Name;
 
-    public String getCustomerID() {
-        return CustomerID;
-    }
 
-    public void setCustomerID(String customerID) {
-        CustomerID = customerID;
-    }
-
-    public ReportsHolder(String amount, String revenue, String from, String to, String customerID) {
-        Amount = amount;
-        Revenue = revenue;
+    public ReportsHolder( String from, String to, String name) {
         From = from;
         To = to;
-        CustomerID = customerID;
-    }
-    public ReportsHolder(String amount, String revenue) {
-        Amount = amount;
-        Revenue = revenue;
-    }
-    public ReportsHolder(String from, String to, String customerID) {
-        From = from;
-        To = to;
-        CustomerID = customerID;
+        Name = name;
     }
 
-    public String getAmount() {
+    public ReportsHolder(Double amount, String revenue, String name) {
+        Amount = amount;
+        Revenue = revenue;
+        Name = name;
+    }
+
+    public Double getAmount() {
         return Amount;
     }
 
-    public void setAmount(String amount) {
+    public void setAmount(Double amount) {
         Amount = amount;
     }
+
+    public String getName() {
+        return Name;
+    }
+
+    public void setName(String name) {
+        Name = name;
+    }
+
 
     public String getRevenue() {
         return Revenue;
@@ -64,6 +61,8 @@ public class ReportsHolder
     public void setTo(String to) {
         To = to;
     }
+
+
     public ReportsHolder()
     {
 

@@ -3,7 +3,6 @@ package com.example.organicindiapre.vendor;
 import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.DocumentsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +11,10 @@ import android.widget.Toast;
 
 import com.example.organicindiapre.R;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -31,6 +30,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+/**
+ * Sai Gopal Report fragment
+ */
 public class ReportFragment extends Fragment {
 
     private FirebaseFirestore DB;
@@ -58,7 +60,8 @@ public class ReportFragment extends Fragment {
         revenueAmount.setLayoutManager(Layout);
 
         //Getting Data
-        ReportRef.get()
+        ReportRef
+                .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
                     @Override
@@ -70,14 +73,28 @@ public class ReportFragment extends Fragment {
                             {
                                 if (snapshot.exists())
                                 {
-                                    //Adding Amount and revenue to the adapter according to Customer
-                                    final ReportsHolder reportsHolder = new ReportsHolder(
-                                            Objects.requireNonNull(snapshot.get("Amount")).toString()
-                                            , Objects.requireNonNull(snapshot.get("Revenue")).toString());
-                                    revenueArrayList.add(reportsHolder);
+                                    DB.collection("Users")
+                                            .document(snapshot.getId())
+                                            .get()
+                                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                @Override
+                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                    //Adding Amount and revenue to the adapter according to Customer
+                                                    final ReportsHolder reportsHolder = new ReportsHolder(
+                                                            Double.parseDouble((Objects.requireNonNull(snapshot.get("Amount"))).toString()),
+                                                            Objects.requireNonNull(snapshot.get("Revenue")).toString(),
+                                                            Objects.requireNonNull(documentSnapshot.get("FirstName")).toString()
+                                                    );
+                                                    revenueArrayList.add(reportsHolder);
+                                                    RevenueAdapter revenueAdapter = new RevenueAdapter(revenueArrayList);
+                                                    revenueAmount.setAdapter(revenueAdapter) ;
+                                                    revenueAmount.setHasFixedSize(true);
+                                                }
+                                            });
 
                                     //Getting NoDelivery Data from Database
                                     ReportRef.document(snapshot.getId()).collection("NoDelivery")
+                                            .orderBy("From")
                                             .get()
                                             .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                                 @Override
@@ -87,7 +104,6 @@ public class ReportFragment extends Fragment {
                                                     if (task.isSuccessful()){
                                                         for (final QueryDocumentSnapshot snapshot1 : Objects.requireNonNull(task.getResult()))
                                                         {
-
                                                             //getting Users Name from Database
                                                             DB.collection("Users")
                                                                     .document(snapshot.getId())
@@ -97,9 +113,7 @@ public class ReportFragment extends Fragment {
                                                                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                                                             if (task.isSuccessful())
                                                                             {
-
                                                                                 DocumentSnapshot documentSnapshot = task.getResult();
-                                                                                Toast.makeText(getContext(), "Done", Toast.LENGTH_SHORT).show();
                                                                                 assert documentSnapshot != null;
                                                                                 ReportsHolder reportsHolder = new ReportsHolder(
                                                                                         Objects.requireNonNull(snapshot1.get("From")).toString(),
@@ -122,9 +136,6 @@ public class ReportFragment extends Fragment {
 
                             }
 
-                            RevenueAdapter revenueAdapter = new RevenueAdapter(revenueArrayList);
-                            revenueAmount.setAdapter(revenueAdapter) ;
-                            revenueAmount.setHasFixedSize(true);
                         }
                         else {
                             Toast.makeText(getActivity(), ""+task.getException(), Toast.LENGTH_SHORT).show();
@@ -144,6 +155,7 @@ public class ReportFragment extends Fragment {
             this.reportsHolders = reportsHolders;
         }
 
+
         @NonNull
         @Override
         public NoDeliveryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -158,7 +170,7 @@ public class ReportFragment extends Fragment {
 
             holder.from.setText("From : " +reportsHolders.get(position).getFrom());
             holder.to.setText("To : "+reportsHolders.get(position).getTo());
-            holder.customerName.setText(reportsHolders.get(position).getCustomerID());
+            holder.customerName.setText(reportsHolders.get(position).getName());
 
         }
 
@@ -197,6 +209,7 @@ public class ReportFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull RevenueViewHolder holder, int position)
         {
+            holder.Name.setText(arrayList.get(position).getName());
             holder.amount.setText("Amount : "+arrayList.get(position).getAmount());
             holder.revenue.setText("Revenue : "+arrayList.get(position).getRevenue());
         }
@@ -207,9 +220,10 @@ public class ReportFragment extends Fragment {
         }
 
         static class RevenueViewHolder extends RecyclerView.ViewHolder {
-            TextView revenue,amount;
+            TextView revenue,amount,Name;
             RevenueViewHolder(@NonNull View itemView) {
                 super(itemView);
+                Name = itemView.findViewById(R.id.customer_name);
                 revenue = itemView.findViewById(R.id.revenue);
                 amount = itemView.findViewById(R.id.amount);
             }

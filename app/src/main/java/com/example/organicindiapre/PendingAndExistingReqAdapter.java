@@ -77,6 +77,10 @@ public class PendingAndExistingReqAdapter extends RecyclerView.Adapter<PendingAn
                             {
                                 if (snapshot.getId().equals(arrayList.get(position).getSubscriptionID()))
                                 {
+                                    if (fragmentName.equals("Existing"))
+                                    {
+                                        holder.amount.setText(snapshot.get("Amount").toString());
+                                    }
                                     SubscriptionRef.document(snapshot.getId()).collection("Products")
                                             .get()
                                             .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -214,7 +218,6 @@ public class PendingAndExistingReqAdapter extends RecyclerView.Adapter<PendingAn
         String documentID ;
         EditText amount ;
         Button activate;
-
         @SuppressLint("SetTextI18n")
         viewholder(@NonNull View itemView)
         {

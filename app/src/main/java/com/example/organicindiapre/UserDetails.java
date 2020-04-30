@@ -56,12 +56,6 @@ public class UserDetails extends AppCompatActivity {
         userID = Objects.requireNonNull(fAuth.getCurrentUser()).getUid();
 
 
-        if(getSelected().equals("Vendor"))
-        {
-
-        }
-
-
 
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,6 +72,7 @@ public class UserDetails extends AppCompatActivity {
                         DocumentReference docRef = fStore.collection("Users").document(userID);
 
                         Map<String,Object> user = new HashMap<>();
+                        user.put("UID",fAuth.getCurrentUser().getUid());
                         user.put("FirstName",firstName.getText().toString());
                         user.put("LastName",lastName.getText().toString());
                         user.put("Email",email.getText().toString());
