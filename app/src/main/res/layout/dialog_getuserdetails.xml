@@ -10,7 +10,8 @@
         android:orientation="vertical"
         android:paddingHorizontal="30dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="#FFF">
         <TextView
             android:text="Select type of account"
             android:textColor="@color/colorAccent"

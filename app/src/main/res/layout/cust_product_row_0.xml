@@ -7,14 +7,16 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:paddingLeft="20sp"
-    android:paddingRight="10sp">
+    android:paddingRight="10sp"
+    android:background="#FFF">
     <TextView
         android:id="@+id/product_name"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="5"
         android:gravity="center_vertical"
-        android:text="Product Name">
+        android:text="Product Name"
+        style="@style/light">
 
     </TextView>
 
@@ -24,7 +26,8 @@
         android:layout_height="match_parent"
         android:layout_weight="5"
         android:gravity="center_vertical"
-        android:text="Qty">
+        android:text="Qty"
+        style="@style/light">
 
     </TextView>
 
@@ -34,7 +37,8 @@
         android:layout_height="match_parent"
         android:layout_weight="5"
         android:gravity="center_vertical"
-        android:text="Amount">
+        android:text="Amount"
+        style="@style/light">
 
     </TextView>
 
@@ -42,7 +46,9 @@
         android:id="@+id/delivered_checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:background="#FFF"
+        >
 
     </CheckBox>
 

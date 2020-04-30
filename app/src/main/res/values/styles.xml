@@ -6,5 +6,18 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+    </style>
+
+    <style name="light">
+        <item name="android:background">#FFF</item>
+        <item name="android:textColor">#000</item>
+        <item name="android:textColorHint">#7D7D8A</item>
+
+
+
+
+
+
     </style>
 </resources>

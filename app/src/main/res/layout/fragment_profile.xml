@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="#FFF">
 
     <TextView
         android:layout_marginTop="20dp"
@@ -31,7 +32,8 @@
             android:layout_marginLeft="10sp"
             android:layout_weight="1"
             android:text="Name"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            style="@style/light"/>
 
         <TextView
             android:id="@+id/profile_vend_actual_name"
@@ -40,6 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Random_name"
+            style="@style/light"
             android:textSize="18sp" />
 
 
@@ -50,6 +53,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20sp"
+
         android:orientation="horizontal">
 
         <TextView
@@ -58,6 +62,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10sp"
             android:layout_weight="1"
+            style="@style/light"
             android:text="Mobile No"
             android:textSize="18sp" />
 
@@ -67,7 +72,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Mobile Number"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+
+            style="@style/light"/>
     </LinearLayout>
     <LinearLayout
         android:id="@+id/vend_linlayout_delivery"
@@ -83,7 +90,9 @@
             android:layout_marginLeft="10sp"
             android:layout_weight="1"
             android:text="Delivery Area"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+
+            style="@style/light"/>
 
         <TextView
             android:id="@+id/profile_vend_actual_delivery"
@@ -91,7 +100,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:hint="Add delivery areas"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            style="@style/light"
+            />
     </LinearLayout>
 
     <TextView
@@ -101,7 +112,7 @@
         android:text="click to Add more location to deliver:-"
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
-        android:textColor="#000000"
+        style="@style/light"
         android:textSize="18dp"/>
 
     <LinearLayout
@@ -131,7 +142,11 @@
         android:outlineAmbientShadowColor="#2196F3"
         android:outlineSpotShadowColor="#009688"
         android:prompt="@string/city_prompt"
-        android:visibility="invisible"/>
+
+        android:visibility="invisible"
+
+        android:background="#DFC0C0"
+        />
         <Button
             android:id="@+id/add_vend_address"
             android:layout_width="wrap_content"

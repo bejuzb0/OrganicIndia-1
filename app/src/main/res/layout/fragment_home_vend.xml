@@ -5,7 +5,8 @@ xmlns:tools="http://schemas.android.com/tools"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
 android:layout_marginHorizontal="10dp"
-android:orientation="vertical">
+android:orientation="vertical"
+    android:background="#FFF">
 
 <TextView
     android:layout_marginTop="20dp"
@@ -21,7 +22,8 @@ android:orientation="vertical">
     <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+        >
 
         <LinearLayout
             android:id="@+id/vend_linlayout_pend_order"
@@ -30,6 +32,7 @@ android:orientation="vertical">
             android:layout_marginTop="20sp"
             android:orientation="vertical"
             android:background="@drawable/border"
+
             >
 
             <TextView
@@ -40,7 +43,8 @@ android:orientation="vertical">
                 android:layout_weight="1"
                 android:text="Pending order:"
                 android:textColor="#000000"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                style="@style/light"/>
 
             <TextView
                 android:id="@+id/pending_order"
@@ -120,7 +124,8 @@ android:orientation="vertical">
             android:layout_gravity="center"
             android:layout_weight="1"
             android:text="Delivered Order value:"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            style="@style/light"/>
 
         <TextView
             android:id="@+id/value_order"
@@ -156,7 +161,7 @@ android:orientation="vertical">
                 android:layout_marginLeft="10sp"
                 android:layout_weight="1"
                 android:text="Delivered order \n(30Days):"
-
+                style="@style/light"
                 android:textSize="18sp" />
 
             <TextView
@@ -168,7 +173,7 @@ android:orientation="vertical">
                 android:text="30"
                 android:textSize="20sp"
                 android:textStyle="bold"
-
+                style="@style/light"
                 android:textColor="#000000"/>
         </LinearLayout>
 </LinearLayout>
@@ -189,7 +194,8 @@ android:orientation="vertical">
             android:layout_marginLeft="10sp"
             android:layout_weight="1"
             android:text="Value of order delivered in 30Days :"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            style="@style/light"/>
 
         <TextView
             android:id="@+id/total_value_order"
@@ -200,8 +206,8 @@ android:orientation="vertical">
             android:text="30"
             android:textSize="20sp"
             android:textStyle="bold"
-
-            android:textColor="#000000" />
+            style="@style/light"
+             />
 
 
     </LinearLayout>

@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".vendor.ProductFragment">
+    tools:context=".vendor.ProductFragment"
+    android:background="#FFF">
 
 
     <LinearLayout
@@ -46,7 +47,8 @@
                     android:layout_alignParentLeft="true"
                     android:text="Product Name"
                     android:textSize="18dp"
-                    android:textStyle="bold"></TextView>
+                    android:textStyle="bold"
+                    style="@style/light"></TextView>
 
                 <TextView
                     android:id="@+id/p_product_quantity"
@@ -56,7 +58,8 @@
                     android:layout_toRightOf="@+id/p_product_name"
                     android:text="Qty"
                     android:textSize="18dp"
-                    android:textStyle="bold"></TextView>
+                    android:textStyle="bold"
+                    style="@style/light"></TextView>
 
                 <TextView
                     android:id="@+id/p_product_amount"
@@ -69,7 +72,8 @@
                     android:gravity="end"
                     android:text="Rate"
                     android:textSize="18dp"
-                    android:textStyle="bold"></TextView>
+                    android:textStyle="bold"
+                    style="@style/light"></TextView>
 
 
             </RelativeLayout>

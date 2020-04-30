@@ -2,21 +2,25 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="50sp">
+    android:padding="50sp"
+    android:background="#FFF">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="#FFF">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="#FFF">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Product Name">
+                android:text="Product Name"
+                >
 
             </TextView>
             <EditText
@@ -24,18 +28,22 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/product_name_add"
                 android:hint="ProductName"
+
+
                 ></EditText>
 
 
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="#FFF">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Quantity">
+                android:text="Quantity"
+                style="@style/light">
 
             </TextView>
             <EditText
@@ -43,17 +51,20 @@
                 android:layout_height="wrap_content"
                 android:hint="Quantity"
                 android:id="@+id/product_quantity_add"
+                style="@style/light"
                 ></EditText>
 
 
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="#FFF">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                style="@style/light"
                 android:text="Rate">
 
             </TextView>
@@ -63,6 +74,7 @@
                 android:layout_height="wrap_content"
                 android:hint="Rate"
                 android:id="@+id/product_rate_add"
+                style="@style/light"
                 ></EditText>
 
 

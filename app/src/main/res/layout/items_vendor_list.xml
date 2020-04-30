@@ -8,12 +8,15 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#FFF"
+    >
     <RelativeLayout
         android:id="@+id/item_layout"
         android:padding="10dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="#FFF">
 
         <TextView
             android:layout_above="@+id/details_layout"
@@ -25,7 +28,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true">
+            android:layout_alignParentLeft="true"
+            android:background="#FFF"
+
+            >
         </TextView>
         <ImageView
             android:layout_alignParentEnd="true"
@@ -44,7 +50,8 @@
             android:padding="8dp"
             android:layout_marginStart="20dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp">
+            android:layout_marginLeft="20dp"
+            android:background="#FFF">
             <TextView
                 android:textStyle="bold"
                 android:layout_alignParentStart="true"
@@ -54,14 +61,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:layout_marginLeft="10dp">
+                android:layout_marginLeft="10dp"
+                style="@style/light">
             </TextView>
             <TextView
                 android:textStyle="bold"
                 android:text="Price(Rs)"
                 android:layout_centerInParent="true"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                style="@style/light">
             </TextView>
             <TextView
                 android:textStyle="bold"
@@ -70,7 +79,8 @@
                 android:layout_centerVertical="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true">
+                android:layout_alignParentRight="true"
+                style="@style/light">
             </TextView>
         </RelativeLayout>
 
@@ -79,7 +89,8 @@
             android:id="@+id/vendor_product_list"
             android:layout_below="@id/details_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="#FFF">
         </androidx.recyclerview.widget.RecyclerView>
     </RelativeLayout>
 

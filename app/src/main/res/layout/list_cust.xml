@@ -7,17 +7,20 @@
     android:padding="3dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="wrap_content"
-    tools:targetApi="lollipop">
+    tools:targetApi="lollipop"
+    android:background="#FFF">
 
     <RelativeLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="#FFF">
 
        <CheckBox
             android:id="@+id/checkbox"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+           android:background="#FFF">
         </CheckBox>
 
         <TextView
@@ -29,14 +32,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:layout_toRightOf="@+id/checkbox">
+            android:layout_toRightOf="@+id/checkbox"
+            style="@style/light">
         </TextView>
         <TextView
             android:layout_centerInParent="true"
             android:id="@+id/product_price"
             android:text="25 Rs"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            style="@style/light">
         </TextView>
         <LinearLayout
             android:padding="5dp"
@@ -59,7 +64,8 @@
                 android:text="1"
                 android:layout_gravity="center_horizontal"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                style="@style/light">
             </TextView>
 
             <ImageButton
