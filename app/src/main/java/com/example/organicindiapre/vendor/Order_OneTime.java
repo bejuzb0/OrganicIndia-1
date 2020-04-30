@@ -111,7 +111,7 @@ public class Order_OneTime extends Fragment {
                         Log.d(TAG, document.getId().toString());
                         customerlist.add(obj);
                     }
-                    itemAdapter = new ItemAdapter(customerlist);
+                    itemAdapter = new ItemAdapter(customerlist, getContext());
                     recyclerView.setAdapter(itemAdapter);
                     itemAdapter.notifyDataSetChanged();
 

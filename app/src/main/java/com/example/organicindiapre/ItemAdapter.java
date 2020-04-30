@@ -1,9 +1,13 @@
 package com.example.organicindiapre;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.example.organicindiapre.customer.CustProduct_Subclass;
@@ -24,9 +28,11 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
 
     private RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();
     private List<CustomerClass> itemList;
+    Context c;
 
-    public ItemAdapter(List<CustomerClass> itemList) {
+    public ItemAdapter(List<CustomerClass> itemList, Context c) {
         this.itemList = itemList;
+        this.c = c;
     }
     @NonNull
     @Override
@@ -48,7 +54,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
                         false
                 );
                 layoutManager.setInitialPrefetchItemCount(customerObj.getProductList().size());
-                SubItemAdapter subItemAdapter = new SubItemAdapter(customerObj.getProductList());
+                SubItemAdapter subItemAdapter = new SubItemAdapter(customerObj.getProductList(),c);
                 holder.productRecyclerView.setLayoutManager(layoutManager);
                 holder.productRecyclerView.setAdapter(subItemAdapter);
                 holder.productRecyclerView.setRecycledViewPool(viewPool);
@@ -78,9 +84,11 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
 
     public class SubItemAdapter extends RecyclerView.Adapter<SubItemAdapter.SubItemViewHolder> {
         List<CustProduct_Subclass> subItemList;
+        Context c;
 
-        SubItemAdapter(List<CustProduct_Subclass> subItemList) {
+        SubItemAdapter(List<CustProduct_Subclass> subItemList, Context c) {
             this.subItemList = subItemList;
+            this.c = c;
         }
 
         @NonNull
@@ -91,11 +99,24 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         }
 
         @Override
-        public void onBindViewHolder(@NonNull SubItemViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull SubItemViewHolder holder, final int position) {
             CustProduct_Subclass subItem = subItemList.get(position);
             holder.prod_name.setText(subItem.getProductName());
             holder.prod_qty.setText(subItem.getQuantity());
             holder.prod_amnt.setText(subItem.getAmount());
+
+
+            holder.checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (isChecked) {
+                        Toast.makeText(c, "Marked devliered at position "+position, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(c, "Marked Undevliered at position "+position, Toast.LENGTH_SHORT).show();
+                    }
+                    // productDetails.setOrderList(SelectedList);
+                }
+            });
         }
 
         @Override
@@ -107,11 +128,13 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
             TextView prod_name;
             TextView prod_qty;
             TextView prod_amnt;
+            CheckBox checkbox;
             public SubItemViewHolder(@NonNull View itemView) {
                 super(itemView);
                 prod_name = itemView.findViewById(R.id.product_name);
                 prod_amnt = itemView.findViewById(R.id.amount_order);
                 prod_qty = itemView.findViewById(R.id.quantity_order);
+                checkbox = itemView.findViewById(R.id.delivered_checkbox);
             }
         }
     }
