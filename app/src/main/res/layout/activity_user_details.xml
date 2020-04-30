@@ -53,6 +53,38 @@
             android:layout_width="match_parent" />
 
     </com.google.android.material.textfield.TextInputLayout>
+
+    <LinearLayout
+        android:id="@+id/add_address_user_layout"
+        android:layout_width="353dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp">
+
+        <TextView
+            android:id="@+id/addresstext_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginTop="15dp"
+            android:drawablePadding="10dp"
+            android:padding="12dp"
+            android:text="Add your locality"
+            android:textColor="#009688"
+            android:textSize="18dp" />
+
+        <Spinner
+            android:id="@+id/locality_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="15dp"
+            android:entries="@array/city_arrays"
+            android:outlineAmbientShadowColor="#2196F3"
+            android:outlineSpotShadowColor="#009688"
+            android:prompt="@string/city_prompt"
+            />
+    </LinearLayout>
+
     <com.google.android.material.textfield.TextInputLayout
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
