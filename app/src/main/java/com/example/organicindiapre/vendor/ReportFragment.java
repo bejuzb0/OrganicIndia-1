@@ -171,6 +171,10 @@ public class ReportFragment extends Fragment {
             holder.from.setText("From : " +reportsHolders.get(position).getFrom());
             holder.to.setText("To : "+reportsHolders.get(position).getTo());
             holder.customerName.setText(reportsHolders.get(position).getName());
+            FirebaseFirestore DB = FirebaseFirestore.getInstance();
+            CollectionReference SubscriptionRef = DB.collection("Subscriptions");
+
+
 
         }
 
@@ -221,11 +225,13 @@ public class ReportFragment extends Fragment {
 
         static class RevenueViewHolder extends RecyclerView.ViewHolder {
             TextView revenue,amount,Name;
+            RecyclerView NoDeliveryProducts;
             RevenueViewHolder(@NonNull View itemView) {
                 super(itemView);
                 Name = itemView.findViewById(R.id.customer_name);
                 revenue = itemView.findViewById(R.id.revenue);
                 amount = itemView.findViewById(R.id.amount);
+                NoDeliveryProducts = itemView.findViewById(R.id.no_delivery_products_recycler);
             }
         }
     }
