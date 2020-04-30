@@ -75,12 +75,13 @@ public class Customer_Act extends AppCompatActivity implements NavigationView.On
                 break;
 
             case R.id.nav_home_customer:
-                Toast.makeText(this, "Home Clicked", Toast.LENGTH_SHORT).show();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_customer,
+                        new CustomerFragment()).commit();
                 break;
 
             case R.id.nav_order_customer:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_customer,
-                        new CustomerFragment()).commit();
+                Toast.makeText(this, "Order Clicked", Toast.LENGTH_SHORT).show();
+
                 break;
             case R.id.nav_subscription_customer:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_customer,

@@ -69,27 +69,80 @@
             android:text="Mobile Number"
             android:textSize="18sp" />
     </LinearLayout>
-    <TextView
+    <LinearLayout
+        android:id="@+id/vend_linlayout_delivery"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20sp"
+        android:orientation="horizontal">
 
-        android:layout_width="300dp"
+        <TextView
+            android:id="@+id/profile_vend_delivery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10sp"
+            android:layout_weight="1"
+            android:text="Delivery Area"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/profile_vend_actual_delivery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Add delivery areas"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textdelivery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="click to Add more location to deliver:-"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:textColor="#000000"
+        android:textSize="18dp"/>
+
+    <LinearLayout
+        android:id="@+id/add_address_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+    <TextView
+        android:id="@+id/addresstext"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left"
         android:layout_marginTop="15dp"
         android:drawablePadding="10dp"
-        android:text="Area for delivery  (this will cover area in 1km radius)"
         android:padding="12dp"
+        android:text="Add Delivery Area"
         android:textColor="#009688"
-        android:textSize="18dp" />
+        android:textSize="18dp"
+        android:visibility="invisible"/>
 
     <Spinner
         android:id="@+id/spinner"
-        android:layout_width="280dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="8dp"
         android:entries="@array/city_arrays"
         android:outlineAmbientShadowColor="#2196F3"
         android:outlineSpotShadowColor="#009688"
-        android:prompt="@string/city_prompt" />
+        android:prompt="@string/city_prompt"
+        android:visibility="invisible"/>
+        <Button
+            android:id="@+id/add_vend_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:text="Add Area"
+            android:textColor="@android:color/white"
+            android:visibility="invisible"/>
+    </LinearLayout>
+
+
 
     <Button
         android:id="@+id/save_button_vend_profile"
@@ -99,6 +152,7 @@
         android:layout_marginBottom="50dp"
         android:background="@color/colorPrimary"
         android:text="Save"
+        android:visibility="gone"
         android:textColor="@android:color/white" />
 
 

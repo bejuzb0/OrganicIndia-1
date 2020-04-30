@@ -36,6 +36,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
+import java.util.ArrayList;
+
+
 public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
@@ -52,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     private LinearLayout statusLayout;
     private FirebaseFirestore db;
 
+    ArrayList<String> group=new  ArrayList<String>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -305,7 +309,15 @@ public class MainActivity extends AppCompatActivity {
                 if(documentSnapshot.exists())
                 {
                     String UserType =documentSnapshot.get("UserType").toString();
-                    if (UserType.equals("Vendor")){
+                    if (UserType.equals("Vendor"))
+                    {
+//                        ArrayList<String> group = (ArrayList<String>) documentSnapshot.get("DeliveryLoaction");
+//                       int k=100;
+//                        if(group==null){
+//                            k=0;}
+//                        else{
+//                            k=1;}
+//                        Log.println(k,"Group","group location");
                         openActivityVendor();
                     }
                     else if(UserType.equals("Customer")) {
