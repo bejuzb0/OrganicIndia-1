@@ -22,16 +22,25 @@
             android:layout_height="wrap_content">
         </TextView>
 
-        <TextView
-            android:id="@+id/from"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_margin="5dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
-        </TextView>
-        <TextView
-            android:id="@+id/to"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-        </TextView>
+            <TextView
+                android:textColor="@color/colorAccent"
+                android:id="@+id/from"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            </TextView>
+            <TextView
+                android:textColor="@color/colorAccent"
+                android:layout_alignParentEnd="true"
+                android:id="@+id/to"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true">
+            </TextView>
+        </RelativeLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/no_delivery_products_recycler"

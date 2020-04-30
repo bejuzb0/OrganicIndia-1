@@ -6,20 +6,38 @@ public class ReportsHolder
     private String Revenue;
     private String From;
     private String To;
+
+    public String getSubscriptionUID() {
+        return SubscriptionUID;
+    }
+
+    public void setSubscriptionUID(String subscriptionUID) {
+        SubscriptionUID = subscriptionUID;
+    }
+
     private String Name;
+    private String SubscriptionUID;
 
+    public ReportsHolder(String from, String to, String name, String subscriptionUID) {
+        From = from;
+        To = to;
+        Name = name;
+        SubscriptionUID = subscriptionUID;
+    }
 
-    public ReportsHolder( String from, String to, String name) {
+    public ReportsHolder(String from, String to, String name) {
         From = from;
         To = to;
         Name = name;
     }
+
 
     public ReportsHolder(Double amount, String revenue, String name) {
         Amount = amount;
         Revenue = revenue;
         Name = name;
     }
+
 
     public Double getAmount() {
         return Amount;
