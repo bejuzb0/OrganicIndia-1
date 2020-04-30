@@ -2,44 +2,59 @@ package com.example.organicindiapre.vendor;
 
 public class ReportsHolder
 {
-    private String Amount;
+    private Double Amount;
     private String Revenue;
     private String From;
     private String To;
-    private String CustomerID;
 
-    public String getCustomerID() {
-        return CustomerID;
+    public String getSubscriptionUID() {
+        return SubscriptionUID;
     }
 
-    public void setCustomerID(String customerID) {
-        CustomerID = customerID;
+    public void setSubscriptionUID(String subscriptionUID) {
+        SubscriptionUID = subscriptionUID;
     }
 
-    public ReportsHolder(String amount, String revenue, String from, String to, String customerID) {
-        Amount = amount;
-        Revenue = revenue;
+    private String Name;
+    private String SubscriptionUID;
+
+    public ReportsHolder(String from, String to, String name, String subscriptionUID) {
         From = from;
         To = to;
-        CustomerID = customerID;
-    }
-    public ReportsHolder(String amount, String revenue) {
-        Amount = amount;
-        Revenue = revenue;
-    }
-    public ReportsHolder(String from, String to, String customerID) {
-        From = from;
-        To = to;
-        CustomerID = customerID;
+        Name = name;
+        SubscriptionUID = subscriptionUID;
     }
 
-    public String getAmount() {
+    public ReportsHolder(String from, String to, String name) {
+        From = from;
+        To = to;
+        Name = name;
+    }
+
+
+    public ReportsHolder(Double amount, String revenue, String name) {
+        Amount = amount;
+        Revenue = revenue;
+        Name = name;
+    }
+
+
+    public Double getAmount() {
         return Amount;
     }
 
-    public void setAmount(String amount) {
+    public void setAmount(Double amount) {
         Amount = amount;
     }
+
+    public String getName() {
+        return Name;
+    }
+
+    public void setName(String name) {
+        Name = name;
+    }
+
 
     public String getRevenue() {
         return Revenue;
@@ -64,6 +79,8 @@ public class ReportsHolder
     public void setTo(String to) {
         To = to;
     }
+
+
     public ReportsHolder()
     {
 

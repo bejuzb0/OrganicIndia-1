@@ -1,6 +1,8 @@
 package com.example.organicindiapre.customer;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,9 +15,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.Adapter;
 
 import com.example.organicindiapre.CustomerDetails;
 import com.example.organicindiapre.ProductAdapter;
@@ -23,25 +27,37 @@ import com.example.organicindiapre.ProductDetails;
 import com.example.organicindiapre.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.datepicker.CalendarConstraints;
+import com.google.android.material.datepicker.DateValidatorPointForward;
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.dialog.MaterialDialogs;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.requireNonNull;
 
 public class CustomerSubscriptionFragment extends Fragment
 {
-    final FirebaseFirestore FStore = FirebaseFirestore.getInstance();
+    private final FirebaseFirestore FStore = FirebaseFirestore.getInstance();
 
-    public ArrayList VendorUIDArrayList = new ArrayList<>();
-    String UID;
+    private ArrayList VendorUIDArrayList = new ArrayList<>();
+    private String UID;
+    private CollectionReference SubscriptionRef;
+    ProgressDialog progressDialog;
+
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Nullable
@@ -54,7 +70,7 @@ public class CustomerSubscriptionFragment extends Fragment
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         CustomerSubscriptionRecycler.setLayoutManager(layoutManager);
 
-        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Loading...");
         progressDialog.show();
 
@@ -108,11 +124,10 @@ public class CustomerSubscriptionFragment extends Fragment
         return view;
     }
 
-    public  class CustomerSubscriptionAdapter extends RecyclerView.Adapter<CustomerSubscriptionAdapter.ViewHolder>{
+    public class CustomerSubscriptionAdapter extends Adapter<CustomerSubscriptionAdapter.ViewHolder>
+    {
 
         private ArrayList<CustomerDetails> customerDetailsArrayList;
-        private CollectionReference SubscriptionRef;
-
 
         CustomerSubscriptionAdapter(ArrayList<CustomerDetails> customerDetailsArrayList) {
             this.customerDetailsArrayList = customerDetailsArrayList;
@@ -127,6 +142,7 @@ public class CustomerSubscriptionFragment extends Fragment
         }
 
         @Override
+        @SuppressLint("SetTextI18n")
         public void onBindViewHolder(@NonNull final ViewHolder holder, final int position)
         {
 
@@ -143,10 +159,32 @@ public class CustomerSubscriptionFragment extends Fragment
                                 if (snapshot.getId().equals(customerDetailsArrayList.get(position).getSubscriptionID()))
                                 {
                                     String Status = requireNonNull(snapshot.get("Status")).toString();
+                                    String NoDelivery = requireNonNull(snapshot.get("NoDelivery")).toString();
                                     holder.Status.setText(Status);
                                     if (Status.equals("Existing"))
                                     {
                                         holder.NoDelivery.setVisibility(View.VISIBLE);
+                                        if (NoDelivery.equals("true"))
+                                        {
+                                            holder.NoDelivery.setText("Please wait...");
+                                            FStore.collection("Reports").document(String.valueOf(VendorUIDArrayList.get(position)))
+                                                .collection("Customers").document(UID)
+                                                .collection("NoDelivery").document(snapshot.getId())
+                                                .get()
+                                                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<DocumentSnapshot> task)
+                                                    {
+                                                        DocumentSnapshot documentSnapshot = task.getResult();
+                                                        assert documentSnapshot != null;
+                                                        if (task.isSuccessful()) {
+                                                            holder.NoDelivery.setText("No Delivery for : "+
+                                                                    documentSnapshot.get("From")+":"+documentSnapshot.get("To"));
+                                                        }
+                                                        holder.NoDelivery.setEnabled(false);
+                                                    }
+                                                });
+                                        }
                                     }
                                     SubscriptionRef.document(snapshot.getId()).collection("Products")
                                             .get()
@@ -191,21 +229,50 @@ public class CustomerSubscriptionFragment extends Fragment
                 @Override
                 public void onClick(View v)
                 {
-                    
-                    Map<String , Object> NoDeliveryDates = new HashMap<>();
-                    NoDeliveryDates.put("From","3453");
-                    NoDeliveryDates.put("To","345");
-                    FStore.collection("Reports").document(String.valueOf(VendorUIDArrayList.get(position)))
-                            .collection("Customers").document(UID).collection("NoDelivery").document()
-                            .set(NoDeliveryDates)
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task)
-                                {
-                                    Toast.makeText(getContext(), "Document added", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                    Toast.makeText(getContext(), ""+VendorUIDArrayList.get(position), Toast.LENGTH_SHORT).show();
+                    final String[] DateRange = new String[1];
+
+                    CalendarConstraints.Builder calenderConstrain = new CalendarConstraints.Builder();
+                    calenderConstrain.setValidator(DateValidatorPointForward.now());
+
+                    final MaterialDatePicker.Builder datepicker = MaterialDatePicker.Builder.dateRangePicker();
+                    datepicker.setCalendarConstraints(calenderConstrain.build());
+
+                    datepicker.setTitleText("Select NoDelivery Date's");
+                    final MaterialDatePicker DatePicker = datepicker.build();
+                    DatePicker.show(getChildFragmentManager(), "From DATE_PICKER");
+                    DatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
+                        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                        @Override
+                        public void onPositiveButtonClick(Object selection)
+                        {
+                            DateRange[0] = DatePicker.getHeaderText();
+                            requireNonNull(DatePicker.getSelection()).toString();
+                            int index = DateRange[0].length()-1;
+                            int middleIndex = (index/2)+1;
+                            final String fromDate = DateRange[0].substring(0,middleIndex-1).trim();
+                            final String toDate = DateRange[0].substring(middleIndex).trim();
+                            holder.NoDelivery.setText(DateRange[0]);
+                            new MaterialAlertDialogBuilder(requireContext())
+                                    .setTitle("No Delivery")
+                                    .setMessage("Are you Sure No Delivery for "+DateRange[0])
+                                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which)
+                                        {
+                                            SetDateRange(position,fromDate,toDate,holder.documentID);
+                                        }
+                                    })
+                                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which)
+                                        {
+                                         dialog.dismiss();
+                                        }
+                                    }).show();
+
+
+                        }
+                    });
 
                 }
             });
@@ -236,5 +303,36 @@ public class CustomerSubscriptionFragment extends Fragment
                 NoDelivery = itemView.findViewById(R.id.no_delivery_button);
             }
         }
+    }
+
+    private void SetDateRange(int position, String from, String to, final String DocumentID)
+    {
+        progressDialog.show();
+        progressDialog.setTitle("No Delivery");
+        progressDialog.setMessage("Updating...");
+        Map<String , Object> NoDeliveryDates = new HashMap<>();
+        NoDeliveryDates.put("From",from);
+        NoDeliveryDates.put("To",to);
+        FStore.collection("Reports").document(String.valueOf(VendorUIDArrayList.get(position)))
+                .collection("Customers").document(UID).collection("NoDelivery").document(DocumentID)
+                .set(NoDeliveryDates)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task)
+                    {
+                        SubscriptionRef.document(DocumentID)
+                                .update("NoDelivery","true")
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task)
+                                    {
+                                        progressDialog.dismiss();
+                                        Toast.makeText(getContext(), "Document updated", Toast.LENGTH_SHORT).show();
+                                        requireActivity().recreate();
+                                    }
+                                });
+                    }
+                });
+        Toast.makeText(getContext(), ""+VendorUIDArrayList.get(position), Toast.LENGTH_SHORT).show();
     }
 }

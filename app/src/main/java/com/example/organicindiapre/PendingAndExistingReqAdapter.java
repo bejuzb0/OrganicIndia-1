@@ -77,6 +77,10 @@ public class PendingAndExistingReqAdapter extends RecyclerView.Adapter<PendingAn
                             {
                                 if (snapshot.getId().equals(arrayList.get(position).getSubscriptionID()))
                                 {
+                                    if (fragmentName.equals("Existing"))
+                                    {
+                                        holder.amount.setText(snapshot.get("Amount").toString());
+                                    }
                                     SubscriptionRef.document(snapshot.getId()).collection("Products")
                                             .get()
                                             .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -165,34 +169,37 @@ public class PendingAndExistingReqAdapter extends RecyclerView.Adapter<PendingAn
             @Override
             public void onClick(View v)
             {
-                new MaterialAlertDialogBuilder(context)
-                        .setTitle("Delete")
-                        .setMessage("Are sure do you want to delete Subscription for customer : \n\n" +arrayList.get(position).getCustomerName())
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        })
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which)
-                            {
-                                progressDialog.setTitle("Deleting");
-                                progressDialog.show();
-                               SubscriptionRef.document(arrayList.get(position).getSubscriptionID())
-                                       .delete()
-                                       .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                           @Override
-                                           public void onComplete(@NonNull Task<Void> task)
-                                           {
-                                               progressDialog.dismiss();
-                                               context.recreate();
-                                           }
-                                       });
-                            }
-                        })
-                        .show();
+                if(holder.amount.getText().toString().equals("0") || holder.amount.getText().toString().equals(null))
+                {
+                    new MaterialAlertDialogBuilder(context)
+                            .setTitle("Delete")
+                            .setMessage("Are sure do you want to delete Subscription for customer : \n\n" +arrayList.get(position).getCustomerName())
+                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which)
+                                {
+                                    progressDialog.setTitle("Deleting");
+                                    progressDialog.show();
+                                   SubscriptionRef.document(arrayList.get(position).getSubscriptionID())
+                                           .delete()
+                                           .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                               @Override
+                                               public void onComplete(@NonNull Task<Void> task)
+                                               {
+                                                   progressDialog.dismiss();
+                                                   context.recreate();
+                                               }
+                                           });
+                                }
+                            })
+                            .show();
+                }
             }
         });
 
@@ -214,7 +221,6 @@ public class PendingAndExistingReqAdapter extends RecyclerView.Adapter<PendingAn
         String documentID ;
         EditText amount ;
         Button activate;
-
         @SuppressLint("SetTextI18n")
         viewholder(@NonNull View itemView)
         {
