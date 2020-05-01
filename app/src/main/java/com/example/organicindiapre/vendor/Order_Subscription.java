@@ -14,6 +14,7 @@ import com.example.organicindiapre.customer.CustomerClass;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -21,8 +22,10 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.type.Date;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -88,7 +91,30 @@ public class Order_Subscription extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(linearLayoutManager);
         final List<CustomerClass> customerlist = new ArrayList<CustomerClass>();
+        final Map<String, ArrayList<OrderData>> getOrder = new HashMap<String, ArrayList<OrderData>>();
         CollectionReference users = db.collection("Users").document(user.getUid()).collection("Order_Subscription");
+        /*db.collection("Order_Subscription").whereEqualTo("VendorID", user.getUid())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()) {
+                            for(QueryDocumentSnapshot doc: task.getResult()) {
+                                Map<String, Object> m = doc.getData();
+                                String key = m.get("CustomerID").toString();
+                                OrderData orderData = new OrderData(m.get("CustomerID").toString(), m.get("VendorID").toString(), m.get("ProductID").toString(), m.get("From"), m.get("To"), Boolean.parseBoolean(m.get("Delivered").toString()), Integer.parseInt(m.get("Quantity").toString()), Double.parseDouble(m.get("Rate").toString())));
+                                if (getOrder.get(key) == null) {
+                                    getOrder.put(key, new ArrayList<OrderData>());
+                                }
+                                getOrder.get(key).add(orderData);
+
+                            }
+                        }
+                        else {
+
+                        }
+                    }
+                }); */
         users.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -105,7 +131,7 @@ public class Order_Subscription extends Fragment {
                                 List<CustProduct_Subclass> subclass = new ArrayList<CustProduct_Subclass>();
 
                                 for(int i=0; i<productName.size(); i++) {
-                                    subclass.add(new CustProduct_Subclass(productName.get(i).toString(), quant.get(i).toString(), amnt.get(i).toString(), "", ""));
+                                    subclass.add(new CustProduct_Subclass(productName.get(i).toString(), quant.get(i).toString(),amnt.get(i).toString(), "", ""));
                                 }
                                 CustomerClass obj = new CustomerClass(m.get("CustomerName").toString(), m.get("Address").toString(), m.get("PhoneNumber").toString(), subclass);
                                 Log.d(TAG, document.getId().toString());
@@ -120,12 +146,14 @@ public class Order_Subscription extends Fragment {
                         }
                     }
                 });
+
+
         return rootView;
     }
 
 
     // Code to generate 10 random Customer with each 3 products
-    private List<CustomerClass> buildItemList() {
+  /*  private List<CustomerClass> buildItemList() {
         List<CustomerClass> itemList = new ArrayList<>();
         for (int i=0; i<10; i++) {
             CustomerClass customerClass = new CustomerClass("Customer "+ i, "Address"+i, "phoneNo"+i, buildProductList());
@@ -133,8 +161,8 @@ public class Order_Subscription extends Fragment {
         }
         return itemList;
     }
-
-    private List<CustProduct_Subclass> buildProductList() {
+*/
+  /*  private List<CustProduct_Subclass> buildProductList() {
         List<CustProduct_Subclass> subItemList = new ArrayList<>();
         for (int i=0; i<3; i++) {
             CustProduct_Subclass subItem = new CustProduct_Subclass("Product "+i, "Quantity "+i, "Amount" +i, "Description"+i, "Delivered"+i);
@@ -142,6 +170,8 @@ public class Order_Subscription extends Fragment {
         }
         return subItemList;
     }
+
+   */
  // Code to generate 10 random Customer with each 3 products
  /*   private List<CustomerClass> buildItemList() {
 
@@ -180,3 +210,4 @@ public class Order_Subscription extends Fragment {
     public interface onFragmentInteractionListener {
     }
 }
+
