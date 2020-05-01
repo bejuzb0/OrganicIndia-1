@@ -6,16 +6,19 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#FFF">
 
     <LinearLayout
         android:orientation="vertical"
         android:padding="10dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="#FFF">
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="#FFF">
             <TextView
                  android:layout_centerHorizontal="true"
                 android:textColor="@color/colorAccent"
@@ -32,29 +35,34 @@
                 android:layout_width="wrap_content"
                 android:background="@drawable/edit"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true">
+                android:layout_alignParentRight="true"
+                >
             </TextView>
         </RelativeLayout>
         <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="#FFF">
             <TextView
                 android:id="@+id/vendor_address"
                 android:layout_width="150sp"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                style="@style/light">
             </TextView>
             <TextView
                 android:layout_alignParentEnd="true"
                 android:id="@+id/vendor_number"
                 android:layout_width="150sp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true">
+                android:layout_alignParentRight="true"
+                style="@style/light">
             </TextView>
         </RelativeLayout>
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/customer_subscription_products_recycler"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="#FFF">
         </androidx.recyclerview.widget.RecyclerView>
 
         <Button

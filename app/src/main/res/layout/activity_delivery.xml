@@ -5,13 +5,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".customer.Delivery">
+    tools:context=".customer.Delivery"
+    android:background="#FFF">
     <LinearLayout
         android:layout_marginTop="10dp"
         android:layout_margin="15dp"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        >
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -22,7 +24,8 @@
                 android:text="Vendor Name"
                 android:layout_centerVertical="true"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                style="@style/light">
             </TextView>
             <ImageView
                 android:id="@+id/vendor_logo"
@@ -47,7 +50,8 @@
                 <TextView
                     android:text="Product Name : "
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    style="@style/light">
                 </TextView>
                 <TextView
                     android:layout_alignParentEnd="true"
@@ -57,7 +61,8 @@
                     android:textColor="@color/colorPrimary"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true">
+                    android:layout_alignParentRight="true"
+                    style="@style/light">
                 </TextView>
             </RelativeLayout>
             <RelativeLayout
@@ -67,7 +72,8 @@
                 <TextView
                     android:text="Product price : "
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    style="@style/light">
                 </TextView>
                 <TextView
                     android:layout_alignParentEnd="true"
@@ -77,7 +83,8 @@
                     android:textStyle="bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true">
+                    android:layout_alignParentRight="true"
+                    style="@style/light">
                 </TextView>
             </RelativeLayout>
             <RelativeLayout
@@ -87,7 +94,8 @@
                 <TextView
                     android:text="Product quantity : "
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    style="@style/light">
                 </TextView>
                 <TextView
                     android:layout_alignParentEnd="true"
@@ -97,7 +105,8 @@
                     android:textColor="@color/colorPrimary"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true">
+                    android:layout_alignParentRight="true"
+                    android:background="#FFF">
                 </TextView>
             </RelativeLayout>
         </LinearLayout>
@@ -109,7 +118,8 @@
             android:text="This is one time delivery for long term orders, Please subscribe"
             android:id="@+id/oneTimeDeliveryNote"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="#FFF">
         </TextView>
 
         <LinearLayout
@@ -123,7 +133,8 @@
                 android:text="Select the period for Subscription"
                 android:layout_gravity="center_horizontal"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:background="#FFF">
             </TextView>
 
             <RelativeLayout
@@ -136,13 +147,15 @@
                     android:text="From"
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:background="#FFF">
                 </Button>
                 <TextView
                     android:text="To"
                     android:layout_centerInParent="true"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    style="@style/light">
                 </TextView>
                 <Button
                     android:id="@+id/to_button"
@@ -151,7 +164,8 @@
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true">
+                    android:layout_alignParentRight="true"
+                    android:background="#FFF">
                 </Button>
             </RelativeLayout>
 

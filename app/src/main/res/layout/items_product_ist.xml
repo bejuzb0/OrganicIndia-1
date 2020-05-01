@@ -6,6 +6,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:background="#FFF"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
@@ -24,7 +25,8 @@
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:text="MILK"
-                android:layout_marginLeft="10dp">
+                android:layout_marginLeft="10dp"
+                style="@style/light">
             </TextView>
             <TextView
                 android:layout_centerHorizontal="true"
@@ -32,7 +34,8 @@
                 android:layout_width="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_height="wrap_content"
-                android:text="3Lit">
+                android:text="3Lit"
+                style="@style/light">
             </TextView>
 
             <TextView
@@ -43,7 +46,9 @@
                 android:gravity="end"
                 android:text="35/Lit"
                 android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true">
+                android:layout_alignParentRight="true"
+                style="@style/light"
+                >
             </TextView>
         </RelativeLayout>
     </LinearLayout>

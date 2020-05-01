@@ -5,21 +5,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UserDetails">
+    tools:context=".UserDetails"
+    android:background="#FFF">
 <LinearLayout
     android:gravity="center_horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="30dp"
     android:layout_margin="15dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="#FFF">
     <TextView
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:textStyle="bold"
         android:textSize="30sp"
         android:text="Enter Details"
-        android:id="@+id/textView3"/>
+        android:id="@+id/textView3"
+        style="@style/light"/>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_height="wrap_content"
@@ -34,7 +37,8 @@
             android:inputType="textPersonName"
             android:layout_height="wrap_content"
             android:background="#FFF"
-            android:layout_width="match_parent" />
+            android:layout_width="match_parent"
+            style="@style/light"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
