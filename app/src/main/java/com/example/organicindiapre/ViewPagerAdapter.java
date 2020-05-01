@@ -1,3 +1,4 @@
+
 package com.example.organicindiapre;
 
 import java.util.ArrayList;
@@ -24,6 +25,10 @@ public class ViewPagerAdapter extends FragmentPagerAdapter
     {
         fragments.add(fragment);
         titles.add(title);
+    }
+
+    public int getItemPosition(Object obj) {
+        return POSITION_NONE;
     }
 
     @NonNull
