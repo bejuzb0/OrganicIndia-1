@@ -15,8 +15,73 @@ public class CustProduct_Subclass {
     String Amount;
     String Description;
     String Delivered;
+    String productID;
+    String customerID;
 
-    public CustProduct_Subclass() {
+    public String getProductID() {
+        return productID;
+    }
+
+    public void setProductID(String productID) {
+        this.productID = productID;
+    }
+
+    public String getCustomerID() {
+        return customerID;
+    }
+
+    public void setCustomerID(String customerID) {
+        this.customerID = customerID;
+    }
+
+    public String getVendorID() {
+        return vendorID;
+    }
+
+    public void setVendorID(String vendorID) {
+        this.vendorID = vendorID;
+    }
+
+    String vendorID;
+
+    public CustProduct_Subclass(String productName, String quantity, String amount, String description, String delivered) {
+        ProductName = productName;
+        Quantity = quantity;
+        Amount = amount;
+        Description = description;
+        Delivered = delivered;
+    }
+
+    public String getProductName() {
+        return ProductName;
+    }
+
+    public void setProductName(String productName) {
+        ProductName = productName;
+    }
+
+    public String getQuantity() {
+        return Quantity;
+    }
+
+    public void setQuantity(String quantity) {
+        Quantity = quantity;
+    }
+
+    public String getAmount() {
+        return Amount;
+    }
+
+    public void setAmount(String amount) {
+        Amount = amount;
+    }
+
+    public String getDescription() {
+        return Description;
+    }
+
+    public void setDescription(String description) {
+        Description = description;
     }
 
     public String getDelivered() {
@@ -26,50 +91,4 @@ public class CustProduct_Subclass {
     public void setDelivered(String delivered) {
         Delivered = delivered;
     }
-
-    public CustProduct_Subclass(String ProductName, String Quantity, String Amount, String Description, String Delivered) {
-        Log.d(TAG, "CustomerSubClass Created");
-        this.ProductName = ProductName;
-        this.Quantity = Quantity;
-        this.Amount = Amount;
-        this.Delivered = Delivered;
-        this.Description = Description;
-    }
-
-
-
-    public String getProductName() {
-        return ProductName;
-    }
-
-    public void setProductName(String ProductName) {
-        this.ProductName = ProductName;
-    }
-
-    public String getQuantity() {
-        return Quantity;
-    }
-
-    public void setQuantity(String Quantity) {
-        this.Quantity = Quantity;
-    }
-
-    public String getAmount() {
-        return Amount;
-    }
-
-    public void setAmount(String Amount) {
-        this.Amount = Amount;
-    }
-
-    public String getDescription() {
-        return Description;
-    }
-
-    public void setDescription(String Description) {
-        this.Description = Description;
-    }
-
-
-
 }
