@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.example.organicindiapre.customer.CustProduct_Subclass;
 import com.example.organicindiapre.customer.CustomerClass;
+import com.example.organicindiapre.vendor.SelectedItems;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -42,12 +43,14 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
     FirebaseFirestore db;
     double tot_amount = 0;
     List<CustProduct_Subclass> custproductList;
+    List<SelectedItems> selectedItems;
 
 
 
-    public ItemAdapter(List<CustomerClass> itemList, Context c) {
+    public ItemAdapter(List<CustomerClass> itemList, Context c, List<SelectedItems> selectedItems) {
         this.itemList = itemList;
         this.c = c;
+        this.selectedItems = selectedItems;
         db = FirebaseFirestore.getInstance();
     }
     @NonNull
@@ -96,7 +99,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
                             );
                             holder.amount.setText("Rs. "+ Double.toString(tot_amount));
                             layoutManager.setInitialPrefetchItemCount(customerObj.getProductList().size());
-                            SubItemAdapter subItemAdapter = new SubItemAdapter(customerObj.getProductList(),c);
+                            SubItemAdapter subItemAdapter = new SubItemAdapter(customerObj.getProductList(),c, selectedItems);
                             holder.productRecyclerView.setLayoutManager(layoutManager);
                             holder.productRecyclerView.setAdapter(subItemAdapter);
                             holder.productRecyclerView.setRecycledViewPool(viewPool);
@@ -137,11 +140,13 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
     }
 
     public class SubItemAdapter extends RecyclerView.Adapter<SubItemAdapter.SubItemViewHolder> {
-        List<CustProduct_Subclass> subItemList;
+        public List<CustProduct_Subclass> subItemList;
+        List<SelectedItems> selectedItems;
         Context c;
 
-        SubItemAdapter(List<CustProduct_Subclass> subItemList, Context c) {
+        SubItemAdapter(List<CustProduct_Subclass> subItemList, Context c, List<SelectedItems> selectedItems) {
             this.subItemList = subItemList;
+            this.selectedItems = selectedItems;
             this.c = c;
         }
 
@@ -164,9 +169,14 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if (isChecked) {
-                        Toast.makeText(c, subItem.getCustomerID()+subItem.getProductID()+subItem.getVendorID(), Toast.LENGTH_SHORT).show();
+                        selectedItems.add(new SelectedItems(subItem.getCustomerID(), subItem.getVendorID(), subItem.getProductID()));
                     } else {
-                        Toast.makeText(c, "Marked Undevliered at position "+position, Toast.LENGTH_SHORT).show();
+                        for(int i=0; i<selectedItems.size(); i++) {
+                            if(selectedItems.get(i).getCustomerID().equals(subItem.getCustomerID()) && selectedItems.get(i).getVendorID().equals(subItem.getVendorID()) && selectedItems.get(i).getProductID().equals(subItem.getProductID())) {
+                                selectedItems.remove(i);
+                                break;
+                            }
+                        }
                     }
                     // productDetails.setOrderList(SelectedList);
                 }

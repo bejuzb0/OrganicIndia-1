@@ -1,10 +1,12 @@
 package com.example.organicindiapre.vendor;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 
 import com.example.organicindiapre.ItemAdapter;
@@ -50,6 +52,9 @@ public class Order_Subscription extends Fragment {
     CustomerClass customerClass;
     RecyclerView recyclerView;
     LinearLayoutManager linearLayoutManager;
+    List<SelectedItems> selectedItems;
+    Button delivery;
+    Context c;
 
 
     private static final String ARG_PARAM1 = "param1";
@@ -58,17 +63,9 @@ public class Order_Subscription extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public Order_Subscription() {
+    public Order_Subscription(Context c) {
+        this.c = c;
         db = FirebaseFirestore.getInstance();
-    }
-    
-    public static Order_Subscription newInstance(String param1, String param2) {
-        Order_Subscription fragment = new Order_Subscription();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
@@ -85,6 +82,7 @@ public class Order_Subscription extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View rootView = inflater.inflate(R.layout.fragment_order__subscription_0, container, false);
+        delivery = (Button)rootView.findViewById(R.id.mark_delivery_subscription);
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         final List<CustomerClass> itemList = new ArrayList<>();
         final RecyclerView recyclerView = (RecyclerView)rootView.findViewById(R.id.recycViewSubscription);
@@ -137,7 +135,7 @@ public class Order_Subscription extends Fragment {
                                 Log.d(TAG, document.getId().toString());
                                 customerlist.add(obj);
                             }
-                            itemAdapter = new ItemAdapter(customerlist, getContext());
+                            itemAdapter = new ItemAdapter(customerlist, getContext(), selectedItems);
                             recyclerView.setAdapter(itemAdapter);
                             itemAdapter.notifyDataSetChanged();
 

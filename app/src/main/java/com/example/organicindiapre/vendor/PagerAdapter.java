@@ -7,7 +7,7 @@ package com.example.organicindiapre.vendor;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
-
+/*
 public class PagerAdapter extends FragmentStatePagerAdapter {
     int noOfTabs;
 
@@ -33,3 +33,4 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
         return noOfTabs;
     }
 }
+*/

@@ -6,7 +6,7 @@
     android:background="#98F4F4"
     android:orientation="vertical">
 
-    <TextView
+   <!-- <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -15,6 +15,8 @@
         android:textSize="30sp"
         android:textStyle="bold|italic"
         />
+
+    -->
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tablayout"
@@ -37,14 +39,5 @@
 
     </androidx.viewpager.widget.ViewPager>
 
-    <Button
-        android:id="@+id/mark_delivery"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="50dp"
-        android:layout_marginBottom="10dp"
-        android:background="@color/colorPrimary"
-        android:shadowColor="#000000"
-        android:text="Mark Delivered" />
 
 </LinearLayout>
