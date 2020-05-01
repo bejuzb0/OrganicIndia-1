@@ -13,38 +13,13 @@ public class CustomerClass {
     String cust_name;
     String address;
     String phone_no;
-    String CustomerID;
-    String vendorID;
     List<CustProduct_Subclass> ProductList;
-
-    public String getVendorID() {
-        return vendorID;
-    }
-
-    public void setVendorID(String vendorID) {
-        this.vendorID = vendorID;
-    }
-
-    public String getCustomerID() {
-        return CustomerID;
-    }
-
-    public void setCustomerID(String customerID) {
-        CustomerID = customerID;
-    }
 
     public CustomerClass(String cust_name, String address, String phone_no) {
         Log.d(TAG, "CustomerClass Created");
         this.cust_name = cust_name;
         this.address = address;
         this.phone_no = phone_no;
-    }
-
-    public CustomerClass(String cust_name, String address, String phone_no, String customerID) {
-        this.cust_name = cust_name;
-        this.address = address;
-        this.phone_no = phone_no;
-        CustomerID = customerID;
     }
 
     public CustomerClass(String cust_name, String address, String phone_no, List<CustProduct_Subclass> ProductList) {
