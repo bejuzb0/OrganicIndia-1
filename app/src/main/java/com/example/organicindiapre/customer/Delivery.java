@@ -10,6 +10,7 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -20,28 +21,88 @@ import android.widget.Toast;
 import com.example.organicindiapre.ProductAdapter;
 import com.example.organicindiapre.ProductDetails;
 import com.example.organicindiapre.R;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.TimeZone;
+
+import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class Delivery extends AppCompatActivity {
 
     private Button fromDate;
     private Button toDate;
 
+    FirebaseAuth fAuth;
+    FirebaseFirestore fStore;
+
+    String Name,Address,MobileNumber,CustomerId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_delivery);
 
-        Intent intent = getIntent();
-       String ProductName = intent.getStringExtra("PN");
-       String ProductPrice = intent.getStringExtra("PP");
-       String ProductQuantity = intent.getStringExtra("PQ");
-       String Type = intent.getStringExtra("Type");
+       Intent intent = getIntent();
+       String ProductName = intent.getStringExtra("ProductName");
+       String ProductPrice = intent.getStringExtra("Price");
 
-       //Replace this with intent array and Product Details etc
+       String ProductQuantity = intent.getStringExtra("Quantity");
+       String Type = intent.getStringExtra("Type");
+       String VendorId=intent.getStringExtra("VendorId");
+       String ProductId=intent.getStringExtra("ProductId");
+       String Cname=intent.getStringExtra("Name");
+        String Address = intent.getStringExtra("Address");
+        String CustomerId = intent.getStringExtra("CustomerId");
+        String MobileNumber = intent.getStringExtra("MobileNumber");
+
+        Log.d(TAG,"productname= "+ProductName
+                +"\n  ProductPrice "+ProductPrice
+                +"\n ProductId "+ProductId
+                +"\n ProductQuantity "+ProductQuantity
+                +"\n Type "+Type
+                +"\n Address "+Address
+                +"\nVendorId "+VendorId
+                +"\n CustomerId "+CustomerId
+                +"\n MobileNumber "+MobileNumber
+                +"\n Cname "+Cname);
+
+
+
+//        Intent cust_intent=getIntent();
+//        String Name = cust_intent.getStringExtra("Name");
+//        String Address = cust_intent.getStringExtra("Address");
+//        String CustomerId = cust_intent.getStringExtra("CustomerId");
+//        String MobileNumber = cust_intent.getStringExtra("MobileNumber");
+
+//        fAuth = FirebaseAuth.getInstance();
+//        fStore = FirebaseFirestore.getInstance();
+//        DocumentReference docRef =fStore.collection("Users").document(fAuth.getCurrentUser().getUid());
+//        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+//            @Override
+//            public void onSuccess(DocumentSnapshot documentSnapshot) {
+//                if(documentSnapshot.exists()){
+//                    Name = documentSnapshot.getString("FirstName") + " " + documentSnapshot.getString("LastName");
+//                    Address = documentSnapshot.getString("Location");
+//                    //mDA = documentSnapshot.getString("DeliveryAddress");
+//                    MobileNumber = fAuth.getCurrentUser().getPhoneNumber();
+//        CustomerId=fAuth.getCurrentUser().getUid();
+//
+//
+//                }else {
+//                    Log.d(TAG, "Retrieving Data:  Data Not Found ");
+//                }
+//            }
+//        });
+//        Log.d(TAG,"customer name "+Name+Address+" "+CustomerId+" "+MobileNumber);
+
+
+        //Replace this with intent array and Product Details etc
         ArrayList<ProductDetails> productDetails = new ArrayList<>();
 
         RecyclerView ProductsRecycler = findViewById(R.id.Products_recycler);

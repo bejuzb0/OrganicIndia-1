@@ -58,6 +58,7 @@ public class SupplierFragment extends Fragment
     FirebaseFirestore fStore;
     String Addr;
 
+    String Name,Address,MobileNumber,CustomerId;
 
     public SupplierFragment() {
         //this.Addr=Add;
@@ -115,6 +116,18 @@ public class SupplierFragment extends Fragment
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if(documentSnapshot.exists()){
                     Add = documentSnapshot.getString("Location");
+
+
+                    //for delivery use
+                    Name = documentSnapshot.getString("FirstName") + " " + documentSnapshot.getString("LastName");
+
+                    MobileNumber = fAuth.getCurrentUser().getPhoneNumber();
+                    CustomerId=fAuth.getCurrentUser().getUid();
+
+
+
+
+
                     //cust_loc.setText(Add);
 
                     //  Log.d(TAG, "ADDRESS........"+Add);
@@ -184,28 +197,6 @@ public class SupplierFragment extends Fragment
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void showSelected(final String title, final ProductsAdapters adapter)
     {
@@ -214,11 +205,13 @@ public class SupplierFragment extends Fragment
             int arraySize = adapter.getSelectedList().size();
             if (arraySize > 0)
             {
-                if (arraySize  < 4 )
+                if (arraySize  < 6 )
                 {
                     final String name= String.valueOf(adapter.getSelectedList().get(0));
                     final String quantity = String.valueOf(adapter.getSelectedList().get(1));
                     final String price = String.valueOf(adapter.getSelectedList().get(2));
+                    final String vendorID=String.valueOf(adapter.getSelectedList().get(3));
+                    final String productID= String.valueOf(adapter.getSelectedList().get(4));
                 new MaterialAlertDialogBuilder(requireContext())
                         .setTitle(title)
                         .setMessage("SELECTED ITEMS (" + arraySize + ") : \n"+adapter.getSelectedList().toString())
@@ -229,9 +222,17 @@ public class SupplierFragment extends Fragment
                                 Intent intent = new Intent(getContext(),Delivery.class);
 
                                 //passing data from fragment to delivery activity
-                                intent.putExtra("PN",name);
-                                intent.putExtra("PQ",quantity);
-                                intent.putExtra("PP",price);
+                                intent.putExtra("ProductName",name);
+                                intent.putExtra("Quantity",quantity);
+                                intent.putExtra("Price",price);
+                                intent.putExtra("VendorId",vendorID);
+                                intent.putExtra("ProductId",productID);
+
+                                intent.putExtra("Name",Name);
+                                intent.putExtra("CustomerId",CustomerId);
+                                intent.putExtra("MobileNumber",MobileNumber);
+                                intent.putExtra("Address",Add);
+
                                 //one time or subscription type
                                 intent.putExtra("Type",title);
                                 startActivity(intent);

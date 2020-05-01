@@ -1,5 +1,6 @@
 package com.example.organicindiapre.customer;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -72,6 +73,9 @@ public class CustomerProfileFragment extends Fragment {
                     cust_delivery_addr_name.setText(mDAN);
                     cust_delivery_addr.setText(mDA);
                     cust_phone_no.setText(mPhone);
+
+
+
                 }else {
                     Log.d(TAG, "Retrieving Data: Profile Data Not Found ");
                 }

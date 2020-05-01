@@ -89,7 +89,8 @@ public class ProductsAdapters extends RecyclerView.Adapter<ProductsAdapters.view
             // ProductDetails products =  new ProductDetails("milk","hbhk","jhbgre");
             // lis.add(products);
 
-            db.collection("Products").whereEqualTo("VendorID", list.get(position).getVendorID())
+            db.collection("Products")
+                    .whereEqualTo("VendorID", list.get(position).getVendorID())
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
@@ -97,7 +98,7 @@ public class ProductsAdapters extends RecyclerView.Adapter<ProductsAdapters.view
                             if (task.isSuccessful()) {
                                 for (QueryDocumentSnapshot document : task.getResult()) {
                                     Map<String, Object> m = document.getData();
-                                    Log.d(TAG, list.get(position).getVendorID());
+                                    Log.d(TAG,"vendor id"+ list.get(position).getVendorID());
                                     productDetails.add(new ProductDetails(m.get("ProductName").toString(),m.get("Quantity").toString(), m.get("Rate").toString(), 1,list.get(position).getVendorID(), m.get("ProductID").toString()));
                                     Log.d(TAG, "DocumentSnapshot product: " + document.getData());
                                 }
@@ -110,21 +111,12 @@ public class ProductsAdapters extends RecyclerView.Adapter<ProductsAdapters.view
                         }
                     });
 
-          /*  productDetails = new ProductDetails[]
-                    {
-                            new ProductDetails("milk"+position,1,45,1),
-                            new ProductDetails("curd"+position,2,50,2),
-                            new ProductDetails("Paneer"+position,300,55,50),
-                    };*/
+
         }
         else {
             //data for products
             holder.Title.setText("Vendor");
-           /* productDetails = new ProductDetails[]{
-                    new ProductDetails("ravi"+position,100,98,50),
-                    new ProductDetails("krishna"+position,400,92,100),
-                    new ProductDetails("sai"+position,500,54,250),
-            };*/
+
         }
 
         holder.itemLayout.setOnClickListener(new View.OnClickListener()
@@ -143,33 +135,13 @@ public class ProductsAdapters extends RecyclerView.Adapter<ProductsAdapters.view
                     holder.vendorProductList.setVisibility(View.VISIBLE);
                     holder.detailsLayout.setVisibility(View.VISIBLE);
                     isExpended[0] = true;
-                       /* ArrayList<ProductDetails> lis = new ArrayList<>();
-                       for (int i = 0;i<10;i++) {
-                            List list_cust = new List("vendor name "+i, R.drawable.ic_logout);
-                            lis.add(list_cust);
-                        }
-                        */
-                    // SelectedItem = position;
-                    // notifyDataSetChanged();
+
                 }
 
             }
         });
 
-/*
-        if (SelectedItem != position)
-        {
-            holder.vendorLogo.setAlpha(0.5f);
-            holder.detailsLayout.setVisibility(View.GONE);
-            holder.vendorProductList.setVisibility(View.GONE);
-        }
-        else
-            {
-            holder.vendorLogo.setAlpha(0.9f);
-            holder.vendorProductList.setVisibility(View.VISIBLE);
-            holder.detailsLayout.setVisibility(View.VISIBLE);
-        }
- */
+
 
     }
 
@@ -229,6 +201,10 @@ public class ProductsAdapters extends RecyclerView.Adapter<ProductsAdapters.view
             final String Quantity = productDetails.get(position).getProductQuantity();
             final int MinPackingQuantity = productDetails.get(position).getMinPackingQuantity();
 
+            //for delivery options
+            final String productID=productDetails.get(position).getProductID();
+            final String vendorId=productDetails.get(position).getVendorID();
+
             //final String QuantityType = productDetails[position].getQuantityType();
             holder.Name.setText(Name);
             holder.Price.setText(Price + "/" + MinPackingQuantity);
@@ -254,10 +230,15 @@ public class ProductsAdapters extends RecyclerView.Adapter<ProductsAdapters.view
                         SelectedList.add(0, Name);
                         SelectedList.add(1, holder.Quantity.getText().toString());
                         SelectedList.add(2, Price + " ");
+                        SelectedList.add(3,vendorId.toString());
+                        SelectedList.add(4,productID.toString());
+
                     } else {
                         SelectedList.remove(1);
                         SelectedList.remove(Name);
                         SelectedList.remove(Price + " ");
+                        SelectedList.remove(vendorId.toString());
+                        SelectedList.remove(productID);
                     }
                     // productDetails.setOrderList(SelectedList);
                 }
