@@ -323,6 +323,10 @@ public class MainActivity extends AppCompatActivity {
                     else if(UserType.equals("Customer")) {
                        openActivityCustomer();
                     }
+                    else if (UserType.equals("Admin")){
+                        startActivity(new Intent(MainActivity.this,Admin.class));
+                        finish();
+                    }
                     else{
                         startActivity(new Intent(getApplicationContext(),UserDetails.class));
                         finish();
