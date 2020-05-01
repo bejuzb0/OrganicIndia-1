@@ -2,6 +2,8 @@ package com.example.organicindiapre.customer;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
@@ -14,7 +16,12 @@ import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.organicindiapre.ProductAdapter;
+import com.example.organicindiapre.ProductDetails;
 import com.example.organicindiapre.R;
+
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.TimeZone;
 
@@ -34,9 +41,17 @@ public class Delivery extends AppCompatActivity {
        String ProductQuantity = intent.getStringExtra("PQ");
        String Type = intent.getStringExtra("Type");
 
-        TextView productname = findViewById(R.id.product_name);
-        TextView productprice = findViewById(R.id.product_price);
-        TextView productquantity = findViewById(R.id.product_quantity);
+       //Replace this with intent array and Product Details etc
+        ArrayList<ProductDetails> productDetails = new ArrayList<>();
+
+        RecyclerView ProductsRecycler = findViewById(R.id.Products_recycler);
+        LinearLayoutManager linearLayout = new LinearLayoutManager(this);
+        ProductsRecycler.setLayoutManager(linearLayout);
+
+        final ProductAdapter ProductAdapter = new ProductAdapter(productDetails);
+        ProductsRecycler.setHasFixedSize(true);
+        ProductsRecycler.setAdapter(ProductAdapter);
+
         TextView onetime = findViewById(R.id.oneTimeDeliveryNote);
         LinearLayout subscriptionLayout = findViewById(R.id.Subscription_layout);
         fromDate = findViewById(R.id.from_button);
@@ -71,9 +86,9 @@ public class Delivery extends AppCompatActivity {
         });
 
 
-        productname.setText(ProductName);
-        productprice.setText(ProductPrice);
-        productquantity.setText(ProductQuantity);
+        //productname.setText(ProductName);
+        //productprice.setText(ProductPrice);
+        //productquantity.setText(ProductQuantity);
 
         /*
         Getting type of order is one type or subscription
