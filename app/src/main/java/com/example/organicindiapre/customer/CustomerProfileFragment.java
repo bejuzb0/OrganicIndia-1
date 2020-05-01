@@ -64,7 +64,7 @@ public class CustomerProfileFragment extends Fragment {
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if(documentSnapshot.exists()){
                     mName = documentSnapshot.getString("FirstName") + " " + documentSnapshot.getString("LastName");
-                    mDAN = documentSnapshot.getString("DeliveryAddressName");
+                    mDAN = documentSnapshot.getString("Location");
                     mDA = documentSnapshot.getString("DeliveryAddress");
                     mPhone = fAuth.getCurrentUser().getPhoneNumber();
 

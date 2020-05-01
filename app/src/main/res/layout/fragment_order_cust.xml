@@ -4,11 +4,52 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <LinearLayout
+
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/loc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:paddingTop="10dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="10dp"
+            android:layout_marginRight="5dp"
+
+            android:hint="address"
+            android:textColor="#009688"
+            android:textSize="15dp"/>
+<!--    <Spinner-->
+<!--        android:id="@+id/spinner_vend_location"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:layout_marginTop="8dp"-->
+<!--        android:entries="@array/city_arrays"-->
+<!--        android:outlineAmbientShadowColor="#2196F3"-->
+<!--        android:outlineSpotShadowColor="#009688"-->
+<!--        android:prompt="@string/city_prompt"-->
+<!--        android:background="#DFC0C0"-->
+<!--        />-->
+<!--        <Button-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:id="@+id/show"-->
+<!--            android:text="show"-->
+<!--            />-->
+    </LinearLayout>
+
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/vendor_list"
         android:paddingBottom="50dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginTop="40dp"
+        >
     </androidx.recyclerview.widget.RecyclerView>
 
     <LinearLayout

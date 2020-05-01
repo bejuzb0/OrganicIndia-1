@@ -2,14 +2,21 @@ package com.example.organicindiapre.customer;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 
 import com.example.organicindiapre.R;
 import com.example.organicindiapre.ViewPagerAdapter;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,8 +24,12 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
-public class CustomerFragment extends Fragment {
+import static androidx.constraintlayout.widget.Constraints.TAG;
 
+public class CustomerFragment extends Fragment {
+public String Add;
+    FirebaseAuth fAuth;
+    FirebaseFirestore fStore;
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Nullable
@@ -31,8 +42,7 @@ public class CustomerFragment extends Fragment {
         TabLayout tabLayout = view.findViewById(R.id.tabLayout);
 
         tabLayout.setupWithViewPager(viewPager);
-
-       SupplierFragment supplierFragment = new SupplierFragment();
+        SupplierFragment supplierFragment = new SupplierFragment();
        ProductOrderFragment productOrderFragment = new ProductOrderFragment();
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager(),0);
@@ -41,7 +51,12 @@ public class CustomerFragment extends Fragment {
         viewPager.setAdapter(adapter);
 
 
+
+
+
+
+
         return view;
-        
+
     }
 }
