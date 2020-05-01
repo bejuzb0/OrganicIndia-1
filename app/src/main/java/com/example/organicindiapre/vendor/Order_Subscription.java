@@ -1,10 +1,12 @@
 package com.example.organicindiapre.vendor;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 
 import com.example.organicindiapre.ItemAdapter;
@@ -14,6 +16,7 @@ import com.example.organicindiapre.customer.CustomerClass;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -21,8 +24,10 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.type.Date;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -47,6 +52,9 @@ public class Order_Subscription extends Fragment {
     CustomerClass customerClass;
     RecyclerView recyclerView;
     LinearLayoutManager linearLayoutManager;
+    List<SelectedItems> selectedItems;
+    Button delivery;
+    Context c;
 
 
     private static final String ARG_PARAM1 = "param1";
@@ -55,17 +63,9 @@ public class Order_Subscription extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public Order_Subscription() {
+    public Order_Subscription(Context c) {
+        this.c = c;
         db = FirebaseFirestore.getInstance();
-    }
-    
-    public static Order_Subscription newInstance(String param1, String param2) {
-        Order_Subscription fragment = new Order_Subscription();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
@@ -82,50 +82,74 @@ public class Order_Subscription extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View rootView = inflater.inflate(R.layout.fragment_order__subscription_0, container, false);
+        delivery = (Button)rootView.findViewById(R.id.mark_delivery_subscription);
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         final List<CustomerClass> itemList = new ArrayList<>();
         final RecyclerView recyclerView = (RecyclerView)rootView.findViewById(R.id.recycViewSubscription);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(linearLayoutManager);
         final List<CustomerClass> customerlist = new ArrayList<CustomerClass>();
+        final Map<String, ArrayList<OrderData>> getOrder = new HashMap<String, ArrayList<OrderData>>();
         CollectionReference users = db.collection("Users").document(user.getUid()).collection("Order_Subscription");
-        users.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        /*db.collection("Order_Subscription").whereEqualTo("VendorID", user.getUid())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                                final Map<String, Object> m = document.getData();
-
-                                List<String> productName = (List<String>) document.get("ProductName");
-                                List<String> quant = (List<String>) document.get("Quantity");
-                                List<String> amnt = (List<String>) document.get("Rate");
-
-
-                                List<CustProduct_Subclass> subclass = new ArrayList<CustProduct_Subclass>();
-
-                                for(int i=0; i<productName.size(); i++) {
-                                    subclass.add(new CustProduct_Subclass(productName.get(i).toString(), quant.get(i).toString(), amnt.get(i).toString(), "", ""));
+                        if(task.isSuccessful()) {
+                            for(QueryDocumentSnapshot doc: task.getResult()) {
+                                Map<String, Object> m = doc.getData();
+                                String key = m.get("CustomerID").toString();
+                                OrderData orderData = new OrderData(m.get("CustomerID").toString(), m.get("VendorID").toString(), m.get("ProductID").toString(), m.get("From"), m.get("To"), Boolean.parseBoolean(m.get("Delivered").toString()), Integer.parseInt(m.get("Quantity").toString()), Double.parseDouble(m.get("Rate").toString())));
+                                if (getOrder.get(key) == null) {
+                                    getOrder.put(key, new ArrayList<OrderData>());
                                 }
-                                CustomerClass obj = new CustomerClass(m.get("CustomerName").toString(), m.get("Address").toString(), m.get("PhoneNumber").toString(), subclass);
-                                Log.d(TAG, document.getId().toString());
-                                customerlist.add(obj);
+                                getOrder.get(key).add(orderData);
                             }
-                            itemAdapter = new ItemAdapter(customerlist, getContext());
-                            recyclerView.setAdapter(itemAdapter);
-                            itemAdapter.notifyDataSetChanged();
-
-                        } else {
-                            Log.w(TAG, "Error getting documents.", task.getException());
+                        }
+                        else {
                         }
                     }
-                });
+                }); */
+        users.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                        final Map<String, Object> m = document.getData();
+
+                        List<String> productName = (List<String>) document.get("ProductName");
+                        List<String> quant = (List<String>) document.get("Quantity");
+                        List<String> amnt = (List<String>) document.get("Rate");
+
+
+                        List<CustProduct_Subclass> subclass = new ArrayList<CustProduct_Subclass>();
+
+                        for(int i=0; i<productName.size(); i++) {
+                            subclass.add(new CustProduct_Subclass(productName.get(i).toString(), quant.get(i).toString(),amnt.get(i).toString(), "", ""));
+                        }
+                        CustomerClass obj = new CustomerClass(m.get("CustomerName").toString(), m.get("Address").toString(), m.get("PhoneNumber").toString(), subclass);
+                        Log.d(TAG, document.getId().toString());
+                        customerlist.add(obj);
+                    }
+                    itemAdapter = new ItemAdapter(customerlist, getContext(), selectedItems);
+                    recyclerView.setAdapter(itemAdapter);
+                    itemAdapter.notifyDataSetChanged();
+
+                } else {
+                    Log.w(TAG, "Error getting documents.", task.getException());
+                }
+            }
+        });
+
+
         return rootView;
     }
 
 
     // Code to generate 10 random Customer with each 3 products
-    private List<CustomerClass> buildItemList() {
+  /*  private List<CustomerClass> buildItemList() {
         List<CustomerClass> itemList = new ArrayList<>();
         for (int i=0; i<10; i++) {
             CustomerClass customerClass = new CustomerClass("Customer "+ i, "Address"+i, "phoneNo"+i, buildProductList());
@@ -133,8 +157,8 @@ public class Order_Subscription extends Fragment {
         }
         return itemList;
     }
-
-    private List<CustProduct_Subclass> buildProductList() {
+*/
+  /*  private List<CustProduct_Subclass> buildProductList() {
         List<CustProduct_Subclass> subItemList = new ArrayList<>();
         for (int i=0; i<3; i++) {
             CustProduct_Subclass subItem = new CustProduct_Subclass("Product "+i, "Quantity "+i, "Amount" +i, "Description"+i, "Delivered"+i);
@@ -142,17 +166,14 @@ public class Order_Subscription extends Fragment {
         }
         return subItemList;
     }
- // Code to generate 10 random Customer with each 3 products
+   */
+    // Code to generate 10 random Customer with each 3 products
  /*   private List<CustomerClass> buildItemList() {
-
-
     }
-
     private List<CustProduct_Subclass> buildProductList(String userID) {
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         CollectionReference orders = db.collection("Users").document(user.getUid()).collection("Order_Subscription").document(userID).collection("OrdersByCustomer");
         final List<CustProduct_Subclass> subItemList = new ArrayList<>();
-
         orders.get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -165,7 +186,6 @@ public class Order_Subscription extends Fragment {
                                 CustProduct_Subclass subItem = new CustProduct_Subclass(m.get("ProductName").toString(), m.get("Quantity").toString(), m.get("Amount").toString(), m.get("Description").toString(), m.get("Delivered").toString());
                                 subItemList.add(subItem);
                             }
-
                         } else {
                             Log.w(TAG, "Error getting documents.", task.getException());
                         }
@@ -173,9 +193,7 @@ public class Order_Subscription extends Fragment {
                 });
         Log.d(TAG, "sublistsize"+subItemList.size()+"");
         return subItemList;
-
     }
-
 */
     public interface onFragmentInteractionListener {
     }
