@@ -64,14 +64,14 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
                 holder.cust_name.setText(customerObj.getCust_name());
                 holder.cust_phone_no.setText(customerObj.getPhone_no());
                 holder.cust_address.setText(customerObj.getAddress());
-                String customerID = customerObj.getCustomerID();
+                final String customerID = customerObj.getCustomerID();
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         custproductList = new ArrayList<>();
         custproductList.clear();
         tot_amount = 0;
         final Map<String, CustProduct_Subclass> productList = new HashMap<String, CustProduct_Subclass>();
 
-        db.collection("Orders_OneTime").whereEqualTo("CustomerID", customerID).whereEqualTo("VendorID", user.getUid())
+        db.collection("Orders_OneTime").whereEqualTo("CustomerID", customerID).whereEqualTo("VendorID", user.getUid()).whereEqualTo("Delivered", false)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -81,7 +81,11 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
                                 Map<String, Object> m = doc.getData();
                                 String key = m.get("ProductID").toString();
                                 tot_amount += Double.parseDouble(m.get("Amount").toString());
-                                custproductList.add(new CustProduct_Subclass(m.get("ProductName").toString(), m.get("Quantity").toString(), m.get("Amount").toString(), "", "false"));
+                                CustProduct_Subclass obj = new CustProduct_Subclass(m.get("ProductName").toString(), m.get("Quantity").toString(), m.get("Amount").toString(), "", "false");
+                                obj.setCustomerID(customerID);
+                                obj.setProductID(key);
+                                obj.setVendorID(user.getUid());
+                                custproductList.add(obj);
                             }
                             customerObj.setProductList(custproductList);
 
@@ -90,7 +94,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
                                     LinearLayoutManager.VERTICAL,
                                     false
                             );
-                            holder.amount.setText(Double.toString(tot_amount));
+                            holder.amount.setText("Rs. "+ Double.toString(tot_amount));
                             layoutManager.setInitialPrefetchItemCount(customerObj.getProductList().size());
                             SubItemAdapter subItemAdapter = new SubItemAdapter(customerObj.getProductList(),c);
                             holder.productRecyclerView.setLayoutManager(layoutManager);
@@ -150,7 +154,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
 
         @Override
         public void onBindViewHolder(@NonNull SubItemViewHolder holder, final int position) {
-            CustProduct_Subclass subItem = subItemList.get(position);
+            final CustProduct_Subclass subItem = subItemList.get(position);
             holder.prod_name.setText(subItem.getProductName());
             holder.prod_qty.setText(subItem.getQuantity());
             holder.prod_amnt.setText(subItem.getAmount().toString());
@@ -160,7 +164,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if (isChecked) {
-                        Toast.makeText(c, "Marked devliered at position "+position, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(c, subItem.getCustomerID()+subItem.getProductID()+subItem.getVendorID(), Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(c, "Marked Undevliered at position "+position, Toast.LENGTH_SHORT).show();
                     }

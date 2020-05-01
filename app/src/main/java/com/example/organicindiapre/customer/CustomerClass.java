@@ -14,7 +14,16 @@ public class CustomerClass {
     String address;
     String phone_no;
     String CustomerID;
+    String vendorID;
     List<CustProduct_Subclass> ProductList;
+
+    public String getVendorID() {
+        return vendorID;
+    }
+
+    public void setVendorID(String vendorID) {
+        this.vendorID = vendorID;
+    }
 
     public String getCustomerID() {
         return CustomerID;

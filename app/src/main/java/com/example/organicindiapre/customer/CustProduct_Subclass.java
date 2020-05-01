@@ -15,6 +15,34 @@ public class CustProduct_Subclass {
     String Amount;
     String Description;
     String Delivered;
+    String productID;
+    String customerID;
+
+    public String getProductID() {
+        return productID;
+    }
+
+    public void setProductID(String productID) {
+        this.productID = productID;
+    }
+
+    public String getCustomerID() {
+        return customerID;
+    }
+
+    public void setCustomerID(String customerID) {
+        this.customerID = customerID;
+    }
+
+    public String getVendorID() {
+        return vendorID;
+    }
+
+    public void setVendorID(String vendorID) {
+        this.vendorID = vendorID;
+    }
+
+    String vendorID;
 
     public CustProduct_Subclass(String productName, String quantity, String amount, String description, String delivered) {
         ProductName = productName;

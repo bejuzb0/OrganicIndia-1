@@ -117,7 +117,7 @@ public class Order_OneTime extends Fragment {
         //To uniquely get every customer
         final Map<String, Object> customerdetails = new HashMap<String, Object>();
         Log.d(TAG, user.getUid());
-        db.collection("Orders_OneTime").whereEqualTo("VendorID", user.getUid())
+        db.collection("Orders_OneTime").whereEqualTo("VendorID", user.getUid()).whereEqualTo("Delivered",false)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -131,7 +131,9 @@ public class Order_OneTime extends Fragment {
 
                                 String key = m.get("CustomerID").toString();
                                 if(customerdetails.get(key) == null) {
-                                    customerlist.add(new CustomerClass(m.get("Name").toString(), m.get("Address").toString(), m.get("MobileNumber").toString(), m.get("CustomerID").toString()));
+                                    CustomerClass obj = new CustomerClass(m.get("Name").toString(), m.get("Address").toString(), m.get("MobileNumber").toString(), m.get("CustomerID").toString());
+                                    obj.setVendorID(user.getUid());
+                                    customerlist.add(obj);
                                 }
                                 customerdetails.put(key, new Object());
                             }
